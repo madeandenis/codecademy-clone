@@ -1,0 +1,11 @@
+{
+    "name": "dendev/codecademy",
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.10"
+    }
+}
