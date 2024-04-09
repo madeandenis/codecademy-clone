@@ -9,7 +9,7 @@
     <title>Register</title>
 </head>
 <body>
-  <a class="header-logo" href="http://localhost/demo/JavaCourseSite">
+  <a class="header-logo" href="http://codecademyre.com:8080">
     <img src="assets/logo/logoBlue.png" alt="Logo" class="logo">
   </a>
   <?php
@@ -20,7 +20,7 @@
               echo '<li class="success">' . '<span>&#10004;</span>' . $_SESSION['success_message'] . '</li>';
               echo '</div>';
               unset($_SESSION['success_message']);
-              header("refresh:2;url=http://localhost/demo/JavaCourseSite/login");
+              header("refresh:2;url=http://codecademyre.com:8080/login");
           }
           if (isset($_SESSION['error_messages'])) {
               echo '<div class="error-container">';
@@ -73,7 +73,7 @@
         </div>
         <div class="auth-section">
           <p>Already have an account?</p>
-          <a href="http://localhost/demo/JavaCourseSite/login">Log in</a>
+          <a href="http://codecademyre.com:8080/login">Log in</a>
         </div>
     </form>
   </div>   
