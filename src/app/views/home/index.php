@@ -4,36 +4,35 @@
     <title>CodeCademyReplica</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="public/js/script.js"></script>
+    <script src="assets/js/script.js"></script>
   </head>
 
   <body>
     <header>
       <nav>
         <div class="nav-left">
-          <a href="http://localhost/demo/JavaCourseSite">
-            <img src="public/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)">
+          <a href="http://codecademyre.com:8080/">
+            <img src="assets/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)">
           </a>
           <!-- Dashboard access link - ADMIN Role -->
           <? #php require '../src/App/WebComponents/controlPanelLink.php' ?>
           <ul class="menu">
-            <li><a href="http://localhost/demo/JavaCourseSite">Catalog</a></li>
-            <li><a href="http://localhost/demo/JavaCourseSite">Resources</a></li>
-            <li><a href="http://localhost/demo/JavaCourseSite/pricing">Pricing</a></li>
+            <li><a href="http://codecademyre.com:8080/">Catalog</a></li>
+            <li><a href="http://codecademyre.com:8080/pricing">Pricing</a></li>
           </ul>
         </div>
         <div class="nav-right">
           <ul class="desktop-nav">
-            <li><img src="public/icon/searchIcon.png" alt="searchIcon" class="searchIcon"></li>
-            <li><a href="http://localhost/demo/JavaCourseSite/login" class="login">Log in</a></li>
-            <li><a href="http://localhost/demo/JavaCourseSite/signup" class="signup" id="signUpIndex">Sign Up</a></li>
+            <li><img src="assets/icon/searchIcon.png" alt="searchIcon" class="searchIcon"></li>
+            <li><a href="http://codecademyre.com:8080/login" class="login">Log in</a></li>
+            <li><a href="http://codecademyre.com:8080/signup" class="signup" id="signUpIndex">Sign Up</a></li>
           </ul>
           <ul class="mobile-nav">
-            <li><a href="http://localhost/demo/JavaCourseSite/login" class="login">Log in</a></li>
-            <li><img src="public/icon/menuIcon.png" alt="menuIcon" class="menuIcon" onclick="openNav()"></li>
+            <li><a href="http://codecademyre.com:8080/login" class="login">Log in</a></li>
+            <li><img src="assets/icon/menuIcon.png" alt="menuIcon" class="menuIcon" onclick="openNav()"></li>
           </ul>        
         </div>
       </nav>
@@ -41,28 +40,27 @@
 
     <div id="mobile-fullscrenMenu" class="overlay">
       <div class="overlay-header">
-        <a href="http://localhost/demo/JavaCourseSite"><img src="public/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)"></a>
+        <a href="http://codecademyre.com:8080/"><img src="assets/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)"></a>
         <a class="closebtn" onclick="closeNav()">&times;</a>
       </div>
       <form id="searchBox">
-        <img src="public/icon/searchIcon.png">
+        <img src="assets/icon/searchIcon.png">
         <input type="text" name="search" placeholder="Search our catalog">
       </form>
       <div class="overlay-content">
-        <a href="http://localhost/demo/JavaCourseSite">Catalog</a>
-        <a href="http://localhost/demo/JavaCourseSite">Resources</a>
-        <a href="http://localhost/demo/JavaCourseSite/pricing">Pricing</a>
-        <a href="http://localhost/demo/JavaCourseSite/quiz">Take our quiz</a>
+        <a href="http://codecademyre.com:8080/">Catalog</a>
+        <a href="http://codecademyre.com:8080/pricing">Pricing</a>
+        <a href="http://codecademyre.com:8080/quiz">Take our quiz</a>
       </div>
       <div class="hline"></div>
       <div class="overlay-login">
-          <a href="http://localhost/demo/JavaCourseSite/signup" class="signup"  onclick="closeNav()">Sign Up</a>
-          <a href="http://localhost/demo/JavaCourseSite/login" class="signup"  onclick="closeNav()">Log in</a>
+          <a href="http://codecademyre.com:8080/signup" class="signup"  onclick="closeNav()">Sign Up</a>
+          <a href="http://codecademyre.com:8080/login" class="signup"  onclick="closeNav()">Log in</a>
       </div>
     </div>
 
     <section class="hero-section" id="signUP">
-      <img src="public/images/heroImg.jpg" class="heroImage" alt="hero-image">
+      <img src="assets/images/heroImg.jpg" class="heroImage" alt="hero-image">
       <div class="right-side">
         <div class="hero-content">
           <h1>Millions are learning to code for free on Codecademy. Join us!</h1>
@@ -88,7 +86,7 @@
         </div>
         <div class="dotted-line">.................................</div>
         <div class="course-subsol">
-          <img src="public/icon/icons8-no-connection-24.png">
+          <img src="assets/icon/icons8-no-connection-24.png">
           <p><b>Beginner</b> friendly</p>
           <p><b>7</b> Lessons</p>
         </div>
@@ -104,7 +102,7 @@
         </div>
         <div class="dotted-line">.................................</div>
         <div class="course-subsol">
-          <img src="public/icon/icons8-no-connection-24.png">
+          <img src="assets/icon/icons8-no-connection-24.png">
           <p><b>Beginner</b> friendly</p>
           <p><b>6</b> Lessons</p>
         </div>
@@ -120,7 +118,7 @@
         </div>
         <div class="dotted-line">.................................</div>
         <div class="course-subsol">
-          <img src="public/icon/icons8-no-connection-24.png">
+          <img src="assets/icon/icons8-no-connection-24.png">
           <p><b>Beginner</b> friendly</p>
           <p><b>7</b> Lessons</p>
         </div>
@@ -136,7 +134,7 @@
         </div>
         <div class="dotted-line">.................................</div>
         <div class="course-subsol">
-          <img src="public/icon/icons8-no-connection-24.png">
+          <img src="assets/icon/icons8-no-connection-24.png">
           <p><b>Beginner</b> friendly</p>
           <p><b>7</b> Lessons</p>
         </div>
@@ -164,11 +162,11 @@
           <h1>Not sure where to start?</h1>
         <br>
         <p>This short quiz will sort you out. Answer a few simple questions to get personal career advice and course recommendations.</p>
-        <a href="http://localhost/demo/JavaCourseSite/quiz"><button class="link-button">Take the quiz</button></a>
+        <a href="http://codecademyre.com:8080/quiz"><button class="link-button">Take the quiz</button></a>
         </div>
       </div>
       <div class="right-side-quiz">
-        <img src="public/svg/blueWindow.svg">
+        <img src="assets/svg/blueWindow.svg">
       </div>
     </section>
 
@@ -178,22 +176,22 @@
       <p id="antetP">Watch and read stories from the Codecademy community.</p>
       <div class="stories-container">
         <div class="story">
-          <img src="public/images/person1.jpg" alt="learner portrait">
+          <img src="assets/images/person1.jpg" alt="learner portrait">
           <h3>Technical Analyst to Front-End Engineer in 6 Months </h3>
           <p>Cristina T., Front-End Engineer @ Grid Dynamics, Guadalajara</p>
         </div>
         <div class="story">
-          <img src="public/images/person2.jpg" alt="learner portrait">
+          <img src="assets/images/person2.jpg" alt="learner portrait">
           <h3>Freelancer to Developing Apps for NASA</h3>
           <p>De'Shaun B., Associate Software Engineer, Winter Park</p>
         </div>
         <div class="story">
-          <img src="public/images/person3.jpg" alt="learner portrait">
+          <img src="assets/images/person3.jpg" alt="learner portrait">
           <h3>Lessons from a Product Owner turned Engineer</h3>
           <p>Serena I., Software Developer @ Adidas, South Holland</p>
         </div>
         <div class="story">
-          <img src="public/images/person4.jpg" alt="learner portrait">
+          <img src="assets/images/person4.jpg" alt="learner portrait">
           <h3>From Film to Full-Stack Engineer in 11 Months</h3>
           <p>Julia J., Ruby on Rails Developer, São Paulo</p>
         </div>
@@ -202,7 +200,7 @@
 
     <section class="business-section">
       <div class="left-side-business">
-        <img src="public/logo/logoWhite.png">
+        <img src="assets/logo/logoWhite.png">
         <div class="business-text">
           <h1>Level up your team's skills<h1>
         <br>
@@ -211,13 +209,13 @@
         </div>
       </div>
       <div class="right-side-business">
-        <img src="public/svg/combSVG.svg">
+        <img src="assets/svg/combSVG.svg">
       </div>
     </section>
     
     <section class="business-section signupReturn">
       <div class="right-side-business">
-        <img src="public/images/signUpEnd.webp">
+        <img src="assets/images/signUpEnd.webp">
       </div>
       <div class="left-side-business">
         <div class="business-text">
@@ -241,8 +239,8 @@
             <li>Professional certification</li>
           </ul>
           <h4>Mobile</h4>
-            <img src="public/icon/appStore.png">
-            <img src="public/icon/googlePlay.png">
+            <img src="assets/icon/appStore.png">
+            <img src="assets/icon/googlePlay.png">
         </div>
         <div class="footer-column">
           <h4>Plans</h4>
