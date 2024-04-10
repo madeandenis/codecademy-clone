@@ -1,5 +1,9 @@
 <?php
 
+namespace app\models;
+use app\repositories\RoleRepository;
+use app\utils\MongoUtils;
+
 class User
 {
     protected string $username;
@@ -11,16 +15,6 @@ class User
 
     public static function create() {
         return new self;
-    }
-    public static function createFromDocument($document){
-        $user = self::create();
-        
-        $user->setUsername($document['username'])
-             ->setEmail($document['email'])
-             ->setPassword($document['password'])
-             ->setRoles($document['roles']);
-
-        return $user;
     }
     
     public function setUsername(string $username){
@@ -39,6 +33,20 @@ class User
         $this->roles = $roles;
         return $this;
     }
+
+    public function getUsername(): string {
+        return $this->username;
+    }
+    public function getEmail(): string {
+        return $this->email;
+    }
+    public function getPassword(): string {
+        return $this->password;
+    }
+    public function getRoles(): array {
+        return $this->roles;
+    }
+
     
     public function toArray(): array
     {
