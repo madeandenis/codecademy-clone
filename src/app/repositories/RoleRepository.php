@@ -2,10 +2,7 @@
 
 namespace app\repositories;
 
-use app\core\database\MongoDBManager;
 use MongoDB\Collection;
-use MongoDB\Model\BSONArray;
-use MongoDB\Model\BSONDocument;
 use MongoDB\BSON\ObjectId;
 
 class RoleRepository{
@@ -15,45 +12,47 @@ class RoleRepository{
         $this->collection = $roleCollection;
     }
 
-    public function findObjectIDbyRoleName(string $roleName){
-        return $this->collection->findOne(['name' => $roleName]);
-    } 
-
-    public function extractRoleIDs(BSONArray $bsonArray): array
+    // Extract Methods
+    public function extract_roleIDs_from_rolesArray(array $rolesArray): array
     {
         $roleIDs = [];
-
-        foreach ($bsonArray as $bsonDocument) {
-            if ($bsonDocument instanceof BSONDocument) {
-                $roleID = $this->extractRoleID($bsonDocument);
-                if($roleID){
-                    $roleIDs[] = $roleID; 
-                }
+        foreach($roleIDs as $roleID){
+            if($roleID['id']){
+                $roleIDs[] = $roleID['id'];
             }
         }
-
         return $roleIDs;
     }
 
-    public function extractRoleID(BSONDocument $bsonDocument): ?string
-    {
-        if (isset($bsonDocument['_id'])) {
-            $idField = $bsonDocument['_id'];
-            if ($idField instanceof ObjectId) {
-                return (string) $idField;
+    // Conversion Methods
+    public function convert_roleIDs_to_roleNames(array $roleIDs){
+        $roleNames = [];
+        foreach($roleIDs as $roleID){
+            $filter = ['_id' => new ObjectId($roleID)];
+            $roleName = $this->collection->findOne($filter)['name'];
+            if($roleName){
+                $roleNames[] = $roleName;
             }
         }
-
-        return null;
+        return $roleNames;
     }
 
-    public function convertRoleIDtoRoleName(string $roleID){
-        if (class_exists('MongoDB\BSON\ObjectId')) {
-            $objectID = new ObjectId($roleID);
-            return $this->collection->findOne(['_id' => $objectID])['name'];
-        } else {
-            return null;
+    public function convert_roleName_to_DBRef(string $roleName){
+        $filter = ['name' => $roleName];
+        return $this->collection->findOne($filter)['_id'];
+    }
+    public function convert_roleNames_to_DBRef(array $roleNames){
+        $DBRefs = [];
+
+        foreach($roleNames as $roleName){
+            $dbRef= [
+                '$ref' => $this->collection->getCollectionName(),
+                '$id' => $this->convert_roleName_to_DBRef($roleName)
+            ];
+            $DBRefs[] = $dbRef;
         }
+
+        return $DBRefs;
     }
 
 }

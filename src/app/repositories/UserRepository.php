@@ -23,4 +23,5 @@ class UserRepository{
     public function getUserByEmail(string $email){
         return $this->collection->findOne(['email' => $email]);
     }
+    
 }
