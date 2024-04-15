@@ -13,21 +13,15 @@
         <img src="assets/logo/logoBlue.png" alt="Logo" class="logo">
       </a>
       <?php
-        session_start();
+        use app\utils\FlashMessage;
+        use app\utils\Session;
 
-        if (isset($_SESSION['success_message'])) {
-            echo '<div class="success-container">';
-            echo '<li class="success">' . '<span>&#10004;</span>' . $_SESSION['success_message'] . '</li>';
-            echo '</div>';
-            unset($_SESSION['success_message']);
-            header("refresh:2;url=http://codecademyre.com:8080/home");
-        }
-        if (isset($_SESSION['error_message'])) {
-            echo '<div class="error-container">';
-            echo '<li class="error">' . '<span>&times;</span>' . $_SESSION['error_message'] . '</li>';
-            echo '</div>';
-            unset($_SESSION['error_message']);
-        }
+        $flashMessage = new FlashMessage();
+        $flashMessage->setPageType('login');
+        $flashMessage->displayErrorMessage();
+        $flashMessage->displaySuccessMessage();
+
+        Session::end();
       ?>
       <div class="auth-form">
         <form id="loginForm" method="post">

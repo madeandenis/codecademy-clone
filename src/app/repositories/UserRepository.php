@@ -3,6 +3,7 @@
 namespace app\repositories;
 
 use app\models\User;
+use Exception;
 use MongoDB\Collection;
 use app\core\database\MongoDBManager; 
 
@@ -14,8 +15,13 @@ class UserRepository{
     }
 
     public function createUser(User $user){
-        $insertResult = $this->collection->insertOne($user->toArray());
-        return $insertResult->getInsertedCount() > 0;
+        try{
+            $insertResult = $this->collection->insertOne($user->toArray());
+            return $insertResult->getInsertedCount() > 0;
+        }
+        catch (Exception $e){
+            return false;
+        }
     }
     public function getUserByUsername(string $username){
         return $this->collection->findOne(['username' => $username]);

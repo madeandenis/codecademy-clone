@@ -14,3 +14,6 @@ $router->get('/signup','app\controllers\AuthController','signup');
 $router->get('/register','app\controllers\AuthController','signup');
 $router->post('/signup','app\controllers\AuthController','submitSignup');
 $router->post('/register','app\controllers\AuthController','submitSignup');
+
+$router->get('/admin','app\controllers\AdminController','adminPanel');
+$router->get('/admin/dashboard','app\controllers\AdminController','adminDashboard');

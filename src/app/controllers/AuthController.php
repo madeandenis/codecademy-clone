@@ -9,4 +9,10 @@ class AuthController extends Controller{
     public function signup(){
         $this->renderAuth('signup');
     }
+    public function submitLogin(){
+        $this->handleLogin();
+    }
+    public function submitSignup(){
+        $this->handleRegister();
+    }
 }

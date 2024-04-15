@@ -1,0 +1,131 @@
+:root {
+    --sidebar-bg-color: #1A1D1F;
+    --sidebar-light-grey: #a0a3ae;
+    --sidebar-dark-grey: #272B30;
+    --sidebar-min-width: 80px;
+    --sidebar-max-width: 300px;
+}
+
+body {
+    font-family: 'Proxima Nova', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.page-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    margin: 10px;
+    width: var(--sidebar-min-width);
+    overflow: auto;
+    background-color: var(--sidebar-bg-color);
+    color: var(--sidebar-light-grey);
+    border-radius: 8px;
+    transition: width 0.5s ease;
+}
+.sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.sidebar:hover {
+    width: var(--sidebar-max-width);
+}
+
+/* .page-content */
+.page-content {
+    flex-grow: 1;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Sidebar Header */
+.sidebar-header .logo {
+    color: white;
+    font-size: 14px;
+    font-weight: 550;
+    margin-left: 10px;
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+ /* Sidebar Routes   
+ ul > li > a > i > span
+*/
+
+.sidebar-routes > ul {
+    list-style-type: none;
+    padding: 0;
+}
+.sidebar-routes > ul > li {
+    border-radius: 5px;
+    padding: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
+} 
+.sidebar-routes > ul > li:hover{
+    color: whitesmoke;
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+.sidebar-routes > ul > li > a {
+    display: flex;
+}
+/* Links slide animation */
+.sidebar-routes > ul > li > a > i{
+    font-size: 21px;
+    margin-right: 100px;
+    transition: margin-right 0.9s ease;
+    white-space: nowrap;
+}
+.sidebar-routes:hover > ul > li > a > i{
+    margin-right: 20px;
+}
+.sidebar-routes > ul > li > a > span{
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+.sidebar-routes > ul > li:hover > a > span{
+    font-weight: 600;
+}
+
+/* Sidebar Footer */
+.sidebar-routes > ul > li:last-child{
+    margin-top: 80px;
+}
+
+/* Nav-bar */
+.nav-bar{
+    font-size: 13px;
+    display: flex;
+    margin: -10px;
+    margin-left: -40px;
+    padding-left: 40px;
+    border-radius: 5px;
+    background-color: var(--sidebar-bg-color);
+    color:whitesmoke;
+}
+.nav-bar > div{
+    cursor: pointer;
+    color: var(--sidebar-light-grey);
+    padding: 10px;
+}
+.nav-bar > div:hover{
+    color: whitesmoke;
+    text-decoration: underline;
+}
+.nav-bar > div > i {
+    padding-right: 5px;
+}
+
+.fa-angles-right{
+    color: var(--sidebar-light-grey);
+    margin-top: 11px;
+    padding-left: 20px;
+    padding-right: 20px;
+}

@@ -1,0 +1,96 @@
+ /* Copyright code : https://iamkate.com/code/tree-views/ */
+.tree {
+    cursor: pointer;
+    margin-left: -40px;
+    --spacing: 1.5rem;
+    --radius: 10px;
+    display: none;
+}
+.tree .tables-list{
+    display: none;
+}
+
+.table-node:first-child {
+    margin-top: 20px;
+}
+
+.tree li {
+    display: block;
+    position: relative;
+    padding-left: calc(2 * var(--spacing) - var(--radius) - 2px);
+}
+
+.tree ul {
+    margin-left: calc(var(--radius) - var(--spacing));
+    padding-left: 20px;
+}
+
+.tree ul li  {
+    padding: 20px;
+    border-left: 2px solid #ddd;
+    padding-top: 3px;
+    padding-left: 35px;
+}
+.tree .schema-node > span{
+    border-radius: 5px;
+    padding: 10px;
+    margin: -10px;
+}
+.tree .schema-node:hover > span{
+    color: whitesmoke;
+    background-color: rgba(255, 255, 255, 0.075);
+}
+.tree .table-node > span{
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 5px;
+}
+.tree .table-node:hover > span{
+    color: whitesmoke;
+    background-color: rgba(255, 255, 255, 0.075);
+}
+
+.tree ul:hover {
+    color: #a0a3ae;
+}
+
+.tree ul li:last-child {
+    padding-bottom: 30px;
+    border-color: transparent;
+}
+
+.tree ul li::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: calc(var(--spacing) / -2);
+    left: -2px;
+    width: calc(var(--spacing) + 2px);
+    height: calc(var(--spacing) - 1px);
+    border: solid #ddd;
+    border-width: 0 0 2px 2px;
+}
+
+.tree summary {
+    padding-right: 30px;
+    display: flex;
+    cursor: pointer;
+}
+
+.tree summary span,
+.tree .table-node span {
+    margin-left: -12px;
+}
+
+.tree summary::marker,
+.tree summary::-webkit-details-marker {
+    display: none;
+}
+
+.tree summary:focus {
+    outline: none;
+}
+
+.tree summary:focus-visible {
+    outline: 1px dotted #000;
+}

@@ -13,12 +13,12 @@ class RoleRepository{
     }
 
     // Extract Methods
-    public function extract_roleIDs_from_rolesArray(array $rolesArray): array
+    public function extract_roleIDs_from_rolesArray($rolesArray): array
     {
         $roleIDs = [];
-        foreach($roleIDs as $roleID){
-            if($roleID['id']){
-                $roleIDs[] = $roleID['id'];
+        foreach($rolesArray as $roleID){
+            if($roleID['$id']){
+                $roleIDs[] = (string) $roleID['$id'];
             }
         }
         return $roleIDs;
@@ -27,6 +27,7 @@ class RoleRepository{
     // Conversion Methods
     public function convert_roleIDs_to_roleNames(array $roleIDs){
         $roleNames = [];
+        // To change
         foreach($roleIDs as $roleID){
             $filter = ['_id' => new ObjectId($roleID)];
             $roleName = $this->collection->findOne($filter)['name'];

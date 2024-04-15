@@ -18,7 +18,10 @@
             <img src="assets/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)">
           </a>
           <!-- Dashboard access link - ADMIN Role -->
-          <? #php require '../src/App/WebComponents/controlPanelLink.php' ?>
+          <?php 
+            use app\utils\AdminUI;
+            AdminUI::renderControlPanelLink();
+          ?>
           <ul class="menu">
             <li><a href="http://codecademyre.com:8080/">Catalog</a></li>
             <li><a href="http://codecademyre.com:8080/pricing">Pricing</a></li>
