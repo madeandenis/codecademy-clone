@@ -15,11 +15,8 @@
         <?php require realpath(__DIR__ . '/../..') . '/components/admin/sidebar.php' ?>
         
         <div class="page-content">
-        <?php require realpath(__DIR__ . '/../..') . '/components/admin/navbar.php' ?>
-            <h1>Main Content</h1>
-            <p>This is the main content area.</p>
+            <?php require realpath(__DIR__ . '/../..') . '/components/admin/navbar.php' ?>
         </div>
-
     </div>
 </body>
 </html>

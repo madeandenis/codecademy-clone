@@ -1,19 +1,28 @@
 <?php
 
+
+use app\controllers\HomeController;
+use app\controllers\AuthController;
+use app\controllers\AdminController;
+use app\controllers\ApiController;
+
 use app\core\routing\Router;
 
 $router = Router::getRouter();
 
-$router->get('/','app\controllers\HomeController','index');
-$router->get('/home','app\controllers\HomeController','index');
+$router->get('/', HomeController::class, 'index');
+$router->get('/home', HomeController::class, 'index');
 
-$router->get('/login','app\controllers\AuthController','login');
-$router->post('/login','app\controllers\AuthController','submitLogin');
+$router->get('/login', AuthController::class, 'login');
+$router->post('/login', AuthController::class, 'submitLogin');
 
-$router->get('/signup','app\controllers\AuthController','signup');
-$router->get('/register','app\controllers\AuthController','signup');
-$router->post('/signup','app\controllers\AuthController','submitSignup');
-$router->post('/register','app\controllers\AuthController','submitSignup');
+$router->get('/signup', AuthController::class, 'signup');
+$router->get('/register', AuthController::class, 'signup');
+$router->post('/signup', AuthController::class, 'submitSignup');
+$router->post('/register', AuthController::class, 'submitSignup');
 
-$router->get('/admin','app\controllers\AdminController','adminPanel');
-$router->get('/admin/dashboard','app\controllers\AdminController','adminDashboard');
+$router->get('/admin', AdminController::class, 'adminPanel');
+$router->get('/admin/crud', AdminController::class, 'adminCrud');
+
+// API route
+$router->get('/api/getTables', ApiController::class, 'getTables');

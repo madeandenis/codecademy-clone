@@ -9,7 +9,7 @@
     <title>Login</title>
 </head>
 <body id="loginBody">
-      <a class="header-logo" href="http://codecademyre.com:8080">
+      <a class="header-logo" href="http://codecademyre.com">
         <img src="assets/logo/logoBlue.png" alt="Logo" class="logo">
       </a>
       <?php
@@ -25,7 +25,7 @@
       ?>
       <div class="auth-form">
         <form id="loginForm" method="post">
-            <h1>Log in to <a href="http://codecademyre.com:8080">Codecademy</a></h1>
+            <h1>Log in to <a href="http://codecademyre.com">Codecademy</a></h1>
             <div class="form-group">
               <label for="username_or_email">Email or Username</label>
               <input type="text" id="username_or_email" name="username_or_email" required>
@@ -37,7 +37,7 @@
                 <i class="fas fa-eye show-password"></i>
               </div>
             </div>
-            <a class="reset-link" href="http://codecademyre.com:8080">I forgot my password</a>
+            <a class="reset-link" href="http://codecademyre.com">I forgot my password</a>
             <div class="form-group">
                 <button type="submit" id="loginButton">Login</button>
             </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="auth-section">
               <p>Not a member yet?</p>
-              <a href="http://codecademyre.com:8080/signup">Sign up for free</a>
+              <a href="http://codecademyre.com/signup">Sign up for free</a>
             </div>
         </form>
     </div>  

@@ -1,3 +1,9 @@
+<?php 
+  use app\components\public\CourseSection;
+  use app\core\database\mysql\MySqlManager;
+  use app\utils\PublicUI;
+?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,62 +18,21 @@
 
   <body>
     <header>
-      <nav>
-        <div class="nav-left">
-          <a href="http://codecademyre.com:8080/">
-            <img src="assets/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)">
-          </a>
-          <!-- Dashboard access link - ADMIN Role -->
-          <?php 
-            use app\utils\AdminUI;
-            AdminUI::renderControlPanelLink();
-          ?>
-          <ul class="menu">
-            <li><a href="http://codecademyre.com:8080/">Catalog</a></li>
-            <li><a href="http://codecademyre.com:8080/pricing">Pricing</a></li>
-          </ul>
-        </div>
-        <div class="nav-right">
-          <ul class="desktop-nav">
-            <li><img src="assets/icon/searchIcon.png" alt="searchIcon" class="searchIcon"></li>
-            <li><a href="http://codecademyre.com:8080/login" class="login">Log in</a></li>
-            <li><a href="http://codecademyre.com:8080/signup" class="signup" id="signUpIndex">Sign Up</a></li>
-          </ul>
-          <ul class="mobile-nav">
-            <li><a href="http://codecademyre.com:8080/login" class="login">Log in</a></li>
-            <li><img src="assets/icon/menuIcon.png" alt="menuIcon" class="menuIcon" onclick="openNav()"></li>
-          </ul>        
-        </div>
-      </nav>
+      <?php 
+        PublicUI::renderHeader();
+      ?>
     </header>
 
-    <div id="mobile-fullscrenMenu" class="overlay">
-      <div class="overlay-header">
-        <a href="http://codecademyre.com:8080/"><img src="assets/logo/logoBlue.png" alt="Logo" class="logo" onmouseover="changeImage(this)" onmouseout="restoreImage(this)"></a>
-        <a class="closebtn" onclick="closeNav()">&times;</a>
-      </div>
-      <form id="searchBox">
-        <img src="assets/icon/searchIcon.png">
-        <input type="text" name="search" placeholder="Search our catalog">
-      </form>
-      <div class="overlay-content">
-        <a href="http://codecademyre.com:8080/">Catalog</a>
-        <a href="http://codecademyre.com:8080/pricing">Pricing</a>
-        <a href="http://codecademyre.com:8080/quiz">Take our quiz</a>
-      </div>
-      <div class="hline"></div>
-      <div class="overlay-login">
-          <a href="http://codecademyre.com:8080/signup" class="signup"  onclick="closeNav()">Sign Up</a>
-          <a href="http://codecademyre.com:8080/login" class="signup"  onclick="closeNav()">Log in</a>
-      </div>
-    </div>
-
     <section class="hero-section" id="signUP">
-      <img src="assets/images/heroImg.jpg" class="heroImage" alt="hero-image">
-      <div class="right-side">
+      <div class="hero-left-side">
+        <h1>Millions are learning <br> to code for free on Codecademy. Join us!</h1>
+        <img src="assets/images/heroImg.jpg" class="heroImage" alt="hero-image">
+      </div>
+      <div class="hero-right-side">
         <div class="hero-content">
-          <h1>Millions are learning to code for free on Codecademy. Join us!</h1>
-          <!-- Create a html view frame -->
+          <div class="iframe-container">
+            <iframe src="../signup#signupForm"></iframe>
+          </div>
         </div>
       </div>
     </section>  
@@ -79,69 +44,10 @@
     </div>
 
     <section class="course-section">
-      <div class="course-container">
-        <div class="course-type">
-          <p>Free course</p>
-        </div>
-        <div class="course-description">
-          <h3>Intro to ChatGPT</h3>
-          <p>Learn about ChatGPT, one of the most advanced AI systems available today, and dive into the world of Generative AI.</p>
-        </div>
-        <div class="dotted-line">.................................</div>
-        <div class="course-subsol">
-          <img src="assets/icon/icons8-no-connection-24.png">
-          <p><b>Beginner</b> friendly</p>
-          <p><b>7</b> Lessons</p>
-        </div>
-      </div>
-
-      <div class="course-container">
-        <div class="course-type">
-          <p>Free course</p>
-        </div>
-        <div class="course-description">
-          <h3>Learn HTML</h3>
-          <p>Start at the beginning by learning HTML basics — an important foundation for building and editing web pages.</p>
-        </div>
-        <div class="dotted-line">.................................</div>
-        <div class="course-subsol">
-          <img src="assets/icon/icons8-no-connection-24.png">
-          <p><b>Beginner</b> friendly</p>
-          <p><b>6</b> Lessons</p>
-        </div>
-      </div>
-
-      <div class="course-container">
-        <div class="course-type">
-          <p>Free course</p>
-        </div>
-        <div class="course-description">
-          <h3>Learn JavaScript</h3>
-          <p>Learn how to use JavaScript — a powerful and flexible programming language for adding website interactivity.</p>
-        </div>
-        <div class="dotted-line">.................................</div>
-        <div class="course-subsol">
-          <img src="assets/icon/icons8-no-connection-24.png">
-          <p><b>Beginner</b> friendly</p>
-          <p><b>7</b> Lessons</p>
-        </div>
-      </div>
-      
-      <div class="course-container">
-        <div class="course-type">
-          <p>Free course</p>
-        </div>
-        <div class="course-description">
-          <h3>Learn SQL</h3>
-          <p>In this SQL course, you’ll learn how to manage large datasets and analyze real data using the standard data management language.</p>
-        </div>
-        <div class="dotted-line">.................................</div>
-        <div class="course-subsol">
-          <img src="assets/icon/icons8-no-connection-24.png">
-          <p><b>Beginner</b> friendly</p>
-          <p><b>7</b> Lessons</p>
-        </div>
-      </div>
+      <?php 
+        $courseSection = new CourseSection(MySqlManager::getConnection());
+        $courseSection->displayFreeCourses($courseSection->getFreeCourses());
+      ?>
     </section>
 
     <div class="course-heading-title">  
@@ -165,7 +71,7 @@
           <h1>Not sure where to start?</h1>
         <br>
         <p>This short quiz will sort you out. Answer a few simple questions to get personal career advice and course recommendations.</p>
-        <a href="http://codecademyre.com:8080/quiz"><button class="link-button">Take the quiz</button></a>
+        <a href="http://codecademyre.com/quiz"><button class="link-button">Take the quiz</button></a>
         </div>
       </div>
       <div class="right-side-quiz">
@@ -192,7 +98,7 @@
           <img src="assets/images/person3.jpg" alt="learner portrait">
           <h3>Lessons from a Product Owner turned Engineer</h3>
           <p>Serena I., Software Developer @ Adidas, South Holland</p>
-        </div>
+        </div> 
         <div class="story">
           <img src="assets/images/person4.jpg" alt="learner portrait">
           <h3>From Film to Full-Stack Engineer in 11 Months</h3>
@@ -231,83 +137,9 @@
     </section>
 
     <footer>
-      <div class="footer-container">
-
-        <div class="footer-column">
-          <h4>Career building</h4>
-          <ul>
-            <li>Career paths</li>
-            <li>Career services</li>
-            <li>Interview prep</li>
-            <li>Professional certification</li>
-          </ul>
-          <h4>Mobile</h4>
-            <img src="assets/icon/appStore.png">
-            <img src="assets/icon/googlePlay.png">
-        </div>
-        <div class="footer-column">
-          <h4>Plans</h4>
-          <ul>
-            <li>Paid memberships</li>
-            <li>For Students</li>
-            <li>Business solutions</li>
-          </ul>
-          <h4>Community</h4>
-          <ul>
-            <li>Forums</li>
-            <li>Chapters</li>
-            <li>Events</li>
-          </ul>
-        </div>
-
-        <div class="vertical-divider"></div>
-
-        <div class="footer-column">
-          <h4>Subjects</h4>
-          <ul>
-            <li>AI</li>
-            <li>Cloud Computing</li>
-            <li>Computer Science</li>
-            <li>Cybersecurity</li>
-            <li>Data Science</li>
-            <li>Game Development</li>
-            <li>Machine Learning</li>
-            <li>Web Design</li>
-            <li>Web Development</li>
-          </ul>
-        </div>
-        <div class="footer-column">
-          <h4>Languages</h4>
-          <ul>
-            <li>C / C++</li>
-            <li>C#</li>
-            <li>HTML & CSS</li>
-            <li>JAVA</li>
-            <li>JavaScript</li>
-            <li>Kotlin</li>
-            <li>PHP</li>
-            <li>Python</li>
-            <li>SQL</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="horizontal-divider"></div>
-
-      <div class="footerPolicy">
-        <ul>
-            <li>Privacy policy</li>
-            <li>|</li>
-            <li>Cookie policy</li>
-            <li>|</li>
-            <li>Do Not Sell My Personal Information</li>
-            <li>|</li>
-            <li>Terms</li>
-          </ul>
-          <br> 
-          <p>Made with  <span class="hearth">&#10084;</span> by Denis &copy; 2023</p>      
-      </div>
-
+      <?php 
+        PublicUI::renderFooter();
+      ?>
     </footer>
 
   </body>

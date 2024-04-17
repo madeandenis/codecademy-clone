@@ -16,14 +16,20 @@ function publish(eventName, data) {
     }
 }
 
+// For testing
+var currSchema;
+var currTable;
+
 // Event handlers
 function setSchemaInUse(event) {
     const schemaName = event.currentTarget.innerHTML;
+    currSchema = schemaName;
     publish('schemaChange', schemaName);
 }
 
 function setTableInUse(event) {
     const tableName = event.currentTarget.innerHTML;
+    currTable = tableName;
     publish('tableChange', tableName);
 }
 
@@ -86,4 +92,50 @@ function toggleSchemaTables(event) {
         const displayState = tableList.style.display === 'none' ? 'block' : 'none';
         tableList.style.display = displayState;
     }
+}
+
+// CRUD Operations
+
+function callAPI(action, params, callback){
+    apiUrl = '/api/' + action;
+    
+    if(action === 'getTables'){
+        apiUrl += '?schema=' + params['schema'];
+    }
+
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            callback(data);
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
+}
+
+function renderTableOptions(event){
+    const schema_name = event.currentTarget.innerHTML;
+    callAPI('getTables', {schema:schema_name}, function(response) {
+        var tableSelector = document.getElementById('table-selector');
+        tableSelector.innerHTML = '';
+
+        response.forEach(table => {
+            var option = document.createElement('option');
+            option.value = table;
+            option.textContent = table;
+            tableSelector.appendChild(option);
+        });
+
+        tableSelector.onchange = function() {
+            var selectedTable = tableSelector.value;
+            if (selectedTable) {
+                publish('tableChange', selectedTable);
+            }
+        };
+    });
 }

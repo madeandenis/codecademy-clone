@@ -73,7 +73,12 @@ body {
 }
 
 .sidebar-routes > ul > li > a {
+    color: var(--sidebar-light-grey);
+    text-decoration: none;
     display: flex;
+}
+.sidebar-routes > ul > li > a:hover {
+    color: whitesmoke;
 }
 /* Links slide animation */
 .sidebar-routes > ul > li > a > i{
@@ -86,6 +91,7 @@ body {
     margin-right: 20px;
 }
 .sidebar-routes > ul > li > a > span{
+    margin-top: 2px;
     font-weight: 500;
     font-size: 14px;
     letter-spacing: 1px;

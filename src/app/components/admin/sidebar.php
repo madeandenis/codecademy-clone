@@ -1,12 +1,12 @@
 <div class="sidebar" onmouseleave="closeDbTree()">
     <div class="sidebar-header">
-        <p class="logo">DenDev_<br>Manager</p>
+        <a style="text-decoration:none;" href="http://codecademyre.com/admin"><p class="logo">DenDev_<br>Manager</p></a>
     </div>
     <div class="sidebar-routes">
         <ul>
             <li><a onclick="toggleDbTree()"><i class="fa-solid fa-sitemap"></i><span>Database</span></a></li>
             <?php include 'databaseTree.php' ?>            
-            <li><a><i class="fa-solid fa-bars-progress"></i><span>CRUD</span></a></li>
+            <li><a href="http://codecademyre.com/admin/crud"><i class="fa-solid fa-bars-progress"></i><span>CRUD</span></a></li>
             <li><a><i class="fas fa-search"></i><span>Search</span></a></li>
             <li><a><i class="fas fa-exchange-alt"></i></i><span>Transactions</span></a></li>
             <li><a><i class="fas fa-history"></i><span>History</span></a></li>

@@ -29,6 +29,7 @@ class Router{
     public function post($route, $controller, $action){
         $this->addRoute($route,$controller,$action,"POST");
     }
+
     public function dispatch(){
         $dispatcher = new Dispatcher($this->routes);
         $dispatcher->dispatch($_SERVER['REQUEST_URI'],$_SERVER['REQUEST_METHOD']);

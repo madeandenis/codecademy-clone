@@ -2,13 +2,18 @@
 
 namespace app\controllers;
 
+use app\utils\JWTManager;
+
 class Controller{
     protected $viewsPath;
-    protected $middlewarePath;
+    protected $middlewarePath; 
+    protected $apiPath; 
+
 
     public function __construct() {
         $this->viewsPath = realpath(__DIR__ . '/../views');
         $this->middlewarePath = realpath(__DIR__ . '/../middleware');
+        $this->apiPath = realpath(__DIR__ . '/../api');
     }
 
     protected function renderHome($view){
@@ -18,7 +23,19 @@ class Controller{
         require $this->viewsPath . "/auth/$view.php";
     }
     protected function renderAdmin($view){
-        require $this->viewsPath . "/admin/$view.php";
+        $jwtManager = new JWTManager();
+
+        if(isset($_COOKIE["jwtToken"])){
+            if($jwtManager->hasAdminRole($_COOKIE["jwtToken"])){
+                require $this->viewsPath . "/admin/$view.php";
+            }
+            else{
+                header("Location: http://codecademyre.com/login");
+            }    
+        }
+        else{
+            header("Location: http://codecademyre.com/login");
+        }
     }
 
     protected function handleLogin(){

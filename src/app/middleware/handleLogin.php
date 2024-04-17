@@ -46,6 +46,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username_or_email']) &
     }
 }
 
-header("Location: http://codecademyre.com:8080/login");
+header("Location: http://codecademyre.com/login");
 
 exit; 

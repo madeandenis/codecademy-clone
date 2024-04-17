@@ -6,14 +6,14 @@ function generateSchemaBranches(){
     $schemaBranch = '';
 
     $pdo = MySqlManager::getConnection();
-    $associativeTables = getAssociativeTables($pdo);
+    $associativeTables = MySqlManager::getAssociativeTables($pdo);
 
     foreach($associativeTables as $schema => $tables){
         $schemaNode = '<li class="schema-node">';
-        $schemaNode .= '<span onclick="toggleSchemaTables(event); setSchemaInUse(event);">'.$schema.'</span>';
+        $schemaNode .= '<span onclick="toggleSchemaTables(event); setSchemaInUse(event); renderTableOptions(event);">'.$schema.'</span>';
         $schemaNode .= '<ul class="tables-list">';
         foreach($tables as $table){
-            $schemaNode .= '<li class="table-node" onclick="setTableInUse(event)">'.'<span>'.$table.'</span>'.'</li>';
+            $schemaNode .= '<li class="table-node">'.'<span onclick="setTableInUse(event);">'.$table.'</span>'.'</li>';
         }
         $schemaNode .= '</ul>';
         $schemaNode .= '</li>';
@@ -36,7 +36,4 @@ $dbTree = '
 </ul>
 ';
 
-$databaseTree = '';
-$databaseTree .= $dbTree;  
-
-echo $databaseTree;
+echo $dbTree;
