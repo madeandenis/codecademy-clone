@@ -97,11 +97,23 @@ function toggleSchemaTables(event) {
 // CRUD Operations
 
 function callAPI(action, params, callback){
+    // Base api path
     apiUrl = '/api/' + action;
     
-    if(action === 'getTables'){
-        apiUrl += '?schema=' + params['schema'];
+    if (params && Object.keys(params).length > 0) {
+        apiUrl += '?';
+    
+        const queryParams = [];
+    
+        Object.keys(params).forEach(key => {
+            const encodedKey = encodeURIComponent(key); 
+            const encodedValue = encodeURIComponent(params[key]); 
+            queryParams.push(`${encodedKey}=${encodedValue}`); 
+        });
+    
+        apiUrl += queryParams.join('&');
     }
+    
 
     fetch(apiUrl)
         .then(response => {
@@ -134,8 +146,221 @@ function renderTableOptions(event){
         tableSelector.onchange = function() {
             var selectedTable = tableSelector.value;
             if (selectedTable) {
+                currTable = selectedTable;
                 publish('tableChange', selectedTable);
             }
         };
     });
+}
+
+function displayTableContent(){
+    const tableContainer = document.getElementById('crud-table-container');
+
+    callAPI('getTableData', {schema:currSchema, table:currTable}, function(response) {
+        buildTable(response, tableContainer);
+    });
+    
+}
+
+// TEST ONLY
+callAPI('getTableData', {schema:'library_db', table:'customers'}, function(response) {
+    currSchema = 'library_db';
+    currTable = 'customers';
+    const tableContainer = document.getElementById('crud-table-container');
+    buildTable(response, tableContainer);
+});
+
+function buildTable(data, container) {
+    container.innerHTML = '';
+
+    const table = document.createElement('table');
+    table.id = 'crud-table';
+    
+    // Table Head
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+
+    
+    const keys = Object.keys(data[0]);
+    
+    keys.forEach(key => {
+        const th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+    });
+    
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+    
+    // Table Body
+    const tbody = document.createElement('tbody');
+
+    data.forEach(item => {
+        const row = document.createElement('tr');
+
+        keys.forEach(key => {
+            const cell = document.createElement('td');
+            cell.textContent = item[key];
+            row.appendChild(cell);
+        });
+
+        tbody.appendChild(row);
+    });
+
+    table.appendChild(tbody);
+
+    container.appendChild(table);
+}
+
+
+// Modal Section -> Builder & Open modal
+
+function buildModal(columns, columnValues = []) {
+    let modalBuilder = `
+        <div class="modal-form-container">
+            <form id="modal-form" method="POST" onsubmit="event.preventDefault()">
+    `;
+
+    for (let i = 0; i < columns.length; i++) {
+        let columnName = columns[i];
+        let columnValue = columnValues[i] || ''; 
+
+        modalBuilder += `
+            <label for="${columnName}">${columnName}:</label><br>
+            <input type="text" id="${columnName}" name="${columnName}" value="${columnValue}"><br>
+        `;
+    }
+
+    modalBuilder += `
+            </form>
+        </div>
+    `;
+
+    return modalBuilder;
+}
+
+function insertModal(table, columns) {
+    let insertModal = `
+        <div class="modal-header">
+            <h3>Add new ${table}</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+    `;
+
+    insertModal += buildModal(columns);
+
+    insertModal += `
+        <div class="modal-footer">
+            <button type="submit" class="btn-submit" onclick="updateDatabase(event)">Add</button>
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    `;
+
+    return insertModal;
+}
+
+function updateModal(table, columns, columnValues) {
+    let updateModal = `
+        <div class="modal-header">
+            <h3>Update ${table}</h3>
+            <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+    `;
+
+    updateModal += buildModal(columns, columnValues);
+
+    updateModal += `
+        <div class="modal-footer">
+            <button type="submit" class="btn-submit" onclick="updateDatabase(event)">Update</button>
+            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+    `;
+
+    return updateModal;
+}
+
+function getCurrentTableColumns() {
+    const tableHeaderRow = document.querySelector('#crud-table thead tr'); 
+
+    if (!tableHeaderRow) {
+        return []; 
+    }
+    const tableColumns = tableHeaderRow.querySelectorAll('th'); 
+
+    const columns = []; 
+    tableColumns.forEach(th => {
+        columns.push(th.textContent.trim());
+    });
+
+    return columns;
+}
+
+
+// Open Modals
+function openInsertModal(){
+    const modalsContainer = document.getElementById('crud-modals')
+    const createDataModal = document.getElementById('create-data-modal');
+    createDataModal.innerHTML = insertModal(currTable,getCurrentTableColumns());
+    modalsContainer.style.display = 'block';
+    createDataModal.style.display = 'block';
+}
+
+// Close Modals
+function closeModal(){
+    const modalsContainer = document.getElementById('crud-modals');
+    modalsContainer.style.display = 'none';
+    
+    Array.from(modalsContainer.children).forEach(modal => {
+        modal.style.display = 'none';
+    });   
+}
+
+
+// Update Database 
+function updateDatabase(event){
+    const currentModal = event.currentTarget.parentElement.parentElement;
+    const formData = new FormData(currentModal.querySelector('#modal-form'));
+    formData.append('schema',currSchema);
+    formData.append('table',currTable);
+    
+    const formDataArray = {};
+    formData.forEach((value, key) => {
+        formDataArray[key] = value;
+    });
+    
+    closeModal();
+    
+    callAPI('updateDatabase',formDataArray,function(response){
+        flashMessage(response);
+    })
+    
+}
+
+function flashMessage(textContent) {
+    // Activate dark background
+    const modalsContainer = document.getElementById('crud-modals');
+    modalsContainer.style.display = 'block';
+
+    const messageBox = document.createElement('div');
+    messageBox.id = 'messageBox';
+
+    let timeOut;
+    if(textContent.Error){
+        timeOut = 5;
+        messageBox.innerHTML = '<strong style="color: #c9473e">Error: </strong>' + textContent.Error;
+    }
+    else if(textContent.Success){
+        timeOut = 2;
+        messageBox.innerHTML = '<strong style="color: #73C873">Success: </strong>' + textContent.Success;
+    }
+    document.body.appendChild(messageBox);
+
+    messageBox.style.display = 'block';
+
+    setTimeout(() => {
+        messageBox.style.display = 'none';
+        document.body.removeChild(messageBox); 
+        
+        modalsContainer.style.display = 'none';
+    }, timeOut); 
 }

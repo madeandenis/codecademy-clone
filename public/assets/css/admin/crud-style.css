@@ -1,0 +1,229 @@
+body{
+    background: linear-gradient(45deg, hsla(224, 22%, 13%, 1) 0%, hsla(238, 34%, 17%, 1) 100%);
+}
+
+#table-manager{
+    display: flex;
+    justify-content: space-between;
+    background-color: #15161d;
+    margin-top: 30px;
+    border-radius: 8px;
+    z-index: 10;
+}
+/* Manage table selector */
+#table-manager-selector{
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+}
+#table-manager-selector > h4{
+    letter-spacing: 0.5px;
+    margin-right: 10px; 
+    color: white;
+}
+#table-selector {
+    width: 150px; 
+    font-size: 15px;
+    font-weight: 500;
+    border: none; 
+    color: white;
+    border-bottom: 1px solid #f0f0f0; 
+    background-color: transparent;
+} 
+#table-selector::-webkit-scrollbar {
+	width: 5px;
+}
+#table-selector option {
+    border: none;
+    font-size: 15px;
+    background-color: #111112; 
+    color: white;
+}
+
+/* Table manager buttons */
+#table-manager-buttons{
+    padding: 20px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}
+.button {
+    color: #0a0a0a;
+    font-size: 15px;
+    margin-right: 10px;
+    padding: 8px 17px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Icon styles */
+.select-table-button {
+    background-color: #73C873; 
+}
+.add-button {
+    background-color: #3d97d3; 
+}
+.delete-button {
+    background-color: #c9473e; 
+}
+
+/* Table Styling */
+
+.table-container {
+    max-width: 70vw; 
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-sizing: border-box; 
+}
+
+#crud-table {
+    margin-top: 20px;
+    border-collapse: collapse; 
+    color: rgba(255, 255, 255, 0.885); 
+}
+
+#crud-table th {
+    font-size: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px rgba(255, 255, 255, 0.178) solid;
+    background-color: #111112; 
+}
+#crud-table th:first-child{
+    border-radius: 12px 0px 0px 0px; 
+}
+#crud-table th:last-child{
+    border-radius: 0px 12px 0px 0px; 
+}
+
+#crud-table td {
+    font-size: 12px;
+    padding: 10px 20px;
+}
+
+#crud-table td:hover {
+    background-color: #111112;
+}
+
+#crud-table tr:last-child td:first-child{
+    border-radius: 0px 0px 0px 12px; 
+}
+#crud-table tr:last-child td:last-child{
+    border-radius: 0px 0px 12px 0px; 
+}
+#crud-table tr:nth-child(odd){
+    background-color: #15161d93;
+}
+#crud-table tr:nth-child(even){
+    background-color: #15161d;
+}
+
+/* Modals Styling */
+#crud-modals {
+    /* Change */
+    display: none;  
+    position: fixed; 
+    z-index: 999; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.671); 
+}
+
+#create-data-modal,
+#update-data-modal,
+#delete-data-modal {
+    /* Change */
+    display: none;
+    margin: 50px auto; 
+    width: 25%;
+    color: whitesmoke;
+    background-color: #15161d;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 10px 5px 5px #0101018b; 
+    z-index: 1000;
+}
+.modal-header{
+    display: flex;
+    justify-content: space-between;
+}
+.modal-header h3 {
+    font-size: 15px;
+    margin-top: 0;
+}
+.modal-header span{
+    cursor: pointer;
+    margin-top: -10px;
+    font-size: 30px;
+}
+
+label{
+    font-size: 14px;
+    font-weight: 500;
+}
+input {
+    width: calc(100% - 15px);
+    margin-top: 10px;
+    margin-bottom: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 15px;
+    font-size: 15px;
+    border: none;
+    background-color: #f0f1f8;
+    color:#0D0D11;
+    border-radius: 3px;
+}
+input:focus{
+    outline: none;
+}
+
+.modal-footer {
+    text-align: right;
+}
+.btn-submit, .btn-cancel {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 18px;
+    margin-top: 20px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-submit {
+    background-color: #73C873;
+    color: #232323;
+}
+.btn-submit:hover{
+    transition: 0.2s;
+    background-color: #73c873b4;
+}
+.btn-cancel {
+    background-color: #c9473e;
+    color: #232323;
+}
+.btn-cancel:hover{
+    transition: 0.2s;
+    background-color: #c9473ead;
+}
+
+/* Flash Message Box */
+
+#messageBox {
+    display: none;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -10%);
+    padding: 30px 35px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    z-index: 9999;
+}

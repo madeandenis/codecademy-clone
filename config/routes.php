@@ -26,3 +26,5 @@ $router->get('/admin/crud', AdminController::class, 'adminCrud');
 
 // API route
 $router->get('/api/getTables', ApiController::class, 'getTables');
+$router->get('/api/getTableData', ApiController::class, 'getTableData');
+$router->get('/api/updateDatabase', ApiController::class, 'updateDatabase');

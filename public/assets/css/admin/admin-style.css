@@ -1,5 +1,5 @@
 :root {
-    --sidebar-bg-color: #1A1D1F;
+    --sidebar-bg-color: #15161d;
     --sidebar-light-grey: #a0a3ae;
     --sidebar-dark-grey: #272B30;
     --sidebar-min-width: 80px;
@@ -21,6 +21,7 @@ body {
 .sidebar {
     margin: 10px;
     width: var(--sidebar-min-width);
+    min-width: var(--sidebar-min-width);
     overflow: auto;
     background-color: var(--sidebar-bg-color);
     color: var(--sidebar-light-grey);
@@ -131,7 +132,7 @@ body {
 
 .fa-angles-right{
     color: var(--sidebar-light-grey);
-    margin-top: 11px;
+    margin-top: 14px;
     padding-left: 20px;
     padding-right: 20px;
 }

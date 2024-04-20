@@ -94,4 +94,37 @@ class MySqlManager {
         }
         return $associativeTables;
     }
+
+    // Insertion/Update Database 
+    public static function insertData($pdo, $schema_name, $table_name, $column_names, $column_values) {
+
+        $columnsString = implode(', ', $column_names);
+        $valuePlaceholders = substr(str_repeat(' ? ,',count($column_names)), 0, -1);
+    
+        $insertQuery = "INSERT INTO `$schema_name`.`$table_name` ($columnsString) VALUES ($valuePlaceholders)";
+    
+        try {
+            $pdo->beginTransaction();
+
+            $stmt = $pdo->prepare($insertQuery);
+                        
+            // Bind value to placeholder
+            for ($i = 0; $i < count($column_values); $i++) {
+                $stmt->bindValue($i + 1, $column_values[$i]);
+            }
+
+            $stmt->execute();
+
+            $rowCount = $stmt->rowCount();
+
+            $pdo->commit();
+            
+            return [ "Success" => "Data inserted successfully. $rowCount row(s) affected." ];
+
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+
+            return [ "Error" => $e->getMessage() ];
+        }
+    }
 }
