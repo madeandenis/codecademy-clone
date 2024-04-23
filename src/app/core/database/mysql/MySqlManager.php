@@ -95,8 +95,68 @@ class MySqlManager {
         return $associativeTables;
     }
 
+    // Credit: https://stackoverflow.com/questions/639531/search-text-in-fields-in-every-table-of-a-mysql-database
+    public static function searchData($searchQuery, $pdo) {
+        $out = "";
+        $total = 0;
+        
+        try {
+            // Retrieve all table names
+            $tablesStmt = $pdo->query("SHOW TABLES");
+            $tables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
+            
+            // Loop through each table
+            foreach ($tables as $table) {
+                // Retrieve column names for the current table
+                $columnsStmt = $pdo->prepare("SHOW COLUMNS FROM `$table`");
+                $columnsStmt->execute();
+                $columns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN);
+                
+                if (!empty($columns)) {
+                    $sql_search_fields = [];
+                    
+                    // Build the WHERE clause for searching in each column
+                    foreach ($columns as $column) {
+                        $sql_search_fields[] = "`$column` LIKE ?";
+                    }
+                    
+                    // Construct the search query
+                    $sql_search = "SELECT * FROM `$table` WHERE " . implode(" OR ", $sql_search_fields);
+                    
+                    // Prepare and execute the search query
+                    $searchStmt = $pdo->prepare($sql_search);
+                    
+                    // Bind the search parameter (with wildcards) to each column condition
+                    $searchParam = '%' . $searchQuery . '%';
+                    $params = array_fill(0, count($columns), $searchParam);
+                    $searchStmt->execute($params);
+                    
+                    // Fetch the search results
+                    $rows = $searchStmt->fetchAll(PDO::FETCH_ASSOC);
+                    $rowCount = count($rows);
+                    
+                    if ($rowCount > 0) {
+                        $out .= "$table: $rowCount\n";
+                        $out .= print_r($rows, true) . "\n";
+                        $total += $rowCount;
+                    }
+                }
+            }
+            
+            $out .= "\nTotal results: $total";
+        } catch (PDOException $e) {
+            $out = ["Error" => $e->getMessage()];
+        }
+        
+        return $out;
+    }
+    
+    
     // Insertion/Update Database 
     public static function insertData($pdo, $schema_name, $table_name, $column_names, $column_values) {
+        if (empty($column_names) || empty($column_values)) {
+            return [ "Error" => "Column names or values are empty." ];
+        }
 
         $columnsString = implode(', ', $column_names);
         $valuePlaceholders = substr(str_repeat(' ? ,',count($column_names)), 0, -1);
@@ -127,4 +187,84 @@ class MySqlManager {
             return [ "Error" => $e->getMessage() ];
         }
     }
+
+    public static function updateData($pdo, $schema_name, $table_name, $column_names, $column_values) {
+        if (empty($column_names) || empty($column_values)) {
+            return [ "Error" => "Column names or values are empty." ];
+        }
+    
+        // Modify var names for final proj.
+        $setClause = '';
+        foreach ($column_names as $index => $column_name) {
+            $setClause .= "`$column_name` = ?";
+            if ($index < count($column_names) - 1) {
+                $setClause .= ', ';
+            }
+        }
+    
+        $condition_column = $column_names[0];
+        $condition_value = $column_values[0];
+    
+        $updateQuery = "UPDATE `$schema_name`.`$table_name` SET $setClause WHERE `$condition_column` = ?";
+    
+        try {
+            $pdo->beginTransaction();
+    
+            $stmt = $pdo->prepare($updateQuery);
+    
+            foreach ($column_values as $index => $value) {
+                $stmt->bindValue($index + 1, $value);
+            }
+    
+            $stmt->bindValue(count($column_values) + 1, $condition_value);
+    
+            $stmt->execute();
+    
+            $rowCount = $stmt->rowCount();
+    
+            $pdo->commit();
+    
+            return [ "Success" => "Data updated successfully. $rowCount row(s) affected." ];
+    
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+    
+            return [ "Error" => $e->getMessage() ];
+        }
+    }
+
+    public static function deleteData($pdo, $schema_name, $table_name, $column_name, $column_values) {
+        if (empty($column_name) || empty($column_values)) {
+            return [ "Error" => "Column name or values are empty." ];
+        }
+    
+        $placeholders = implode(',', array_fill(0, count($column_values), '?'));
+    
+        $deleteQuery = "DELETE FROM `$schema_name`.`$table_name` WHERE `$column_name` IN ($placeholders)";
+    
+        try {
+            $pdo->beginTransaction();
+    
+            $stmt = $pdo->prepare($deleteQuery);
+    
+            // Bind values to placeholders
+            foreach ($column_values as $index => $value) {
+                $stmt->bindValue($index + 1, $value);
+            }
+    
+            $stmt->execute();
+    
+            $rowCount = $stmt->rowCount();
+    
+            $pdo->commit();
+    
+            return [ "Success" => "Data deleted successfully. $rowCount row(s) affected." ];
+    
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+    
+            return [ "Error" => $e->getMessage() ];
+        }
+    }
+    
 }

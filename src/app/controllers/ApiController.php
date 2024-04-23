@@ -11,11 +11,10 @@ class ApiController extends Controller{
         if (isset($queryParams['table'])){
             $_GET['table'] = $queryParams['table'];
         }
-        require $this->apiPath . '/crud-api.php';
+        require $this->apiPath . '/crud-api-get.php';
     }
-    // Not implemented
-    public function setData($action,$queryParams){
-
+    public function setData(){
+        require $this->apiPath . '/crud-api-post.php';
     }
 
 }

@@ -23,8 +23,12 @@ $router->post('/register', AuthController::class, 'submitSignup');
 
 $router->get('/admin', AdminController::class, 'adminPanel');
 $router->get('/admin/crud', AdminController::class, 'adminCrud');
+$router->get('/admin/search', AdminController::class, 'adminSearch');
 
 // API route
 $router->get('/api/getTables', ApiController::class, 'getTables');
 $router->get('/api/getTableData', ApiController::class, 'getTableData');
-$router->get('/api/updateDatabase', ApiController::class, 'updateDatabase');
+$router->get('/api/search', ApiController::class, 'search');
+$router->post('/api/insertDatabase', ApiController::class, 'setData');
+$router->post('/api/updateDatabase', ApiController::class, 'setData');
+$router->post('/api/deleteFromDatabase', ApiController::class, 'setData');

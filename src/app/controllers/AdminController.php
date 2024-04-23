@@ -12,4 +12,8 @@ class AdminController extends Controller{
     public function adminCrud(){
         $this->renderAdmin('crud');
     }
+
+    public function adminSearch(){
+        $this->renderAdmin('search');
+    }
 }

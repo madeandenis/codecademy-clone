@@ -30,14 +30,9 @@ class Dispatcher{
             $controller = $this->routes[$method][$uri]['controller'];
             $action = $this->routes[$method][$uri]['action'];
             $controller = new $controller();
-            if($controller instanceof ApiController){
+            if($controller instanceof ApiController && $method == 'GET'){
                 parse_str($queryString, $queryParams);
-                if($method == 'GET'){
-                    $controller->getData($action,$queryParams);
-                }
-                if($method == 'POST'){
-                    $controller->setData($action,$queryParams);
-                }
+                $controller->getData($action,$queryParams);
             }
             else{
                 $controller->$action();

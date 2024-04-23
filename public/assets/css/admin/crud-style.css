@@ -119,6 +119,31 @@ body{
     background-color: #15161d;
 }
 
+/* Checkboxes and Actions Column */
+#crud-table .checkbox {
+    width: 12px;
+}
+
+#crud-table .action .fa-edit,
+#crud-table .action .fa-trash-alt{
+    cursor: pointer;
+    font-size: 16px;
+}
+#crud-table .action .fa-edit{
+    color: #3175b192;
+    padding-right: 8px;
+}
+#crud-table .action .fa-edit:hover{
+    color: #3176B1;
+}
+#crud-table .action .fa-trash-alt{
+    color: #c9473e8f;
+}
+#crud-table .action .fa-trash-alt:hover{
+    color: #c9473e;
+}
+
+
 /* Modals Styling */
 #crud-modals {
     /* Change */
@@ -147,6 +172,34 @@ body{
     box-shadow: 10px 5px 5px #0101018b; 
     z-index: 1000;
 }
+#delete-data-modal{
+    width: fit-content;
+}
+#delete-data-modal td {
+    font-size: 12px;
+    padding: 10px 20px;
+}
+#delete-data-modal td:first-child {
+    color:#c9473e;
+}
+
+#delete-data-modal td:hover {
+    background-color: #111112;
+}
+
+#delete-data-modal tr:last-child td:first-child{
+    border-radius: 0px 0px 0px 12px; 
+}
+#delete-data-modal tr:last-child td:last-child{
+    border-radius: 0px 0px 12px 0px; 
+}
+#delete-data-modal tr:nth-child(odd){
+    background-color: #060b3993;
+}
+#delete-data-modal tr:nth-child(even){
+    background-color: #15161d;
+}
+
 .modal-header{
     display: flex;
     justify-content: space-between;
@@ -186,11 +239,11 @@ input:focus{
     text-align: right;
 }
 .btn-submit, .btn-cancel {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
-    padding: 8px 18px;
+    padding: 7px 15px;
     margin-top: 20px;
-    margin-left: 10px;
+    margin-left: 4px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -213,8 +266,8 @@ input:focus{
     background-color: #c9473ead;
 }
 
-/* Flash Message Box */
 
+/* Flash Message Box */
 #messageBox {
     display: none;
     position: fixed;
