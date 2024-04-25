@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../assets/css/admin/sidebar-tree-list.css">
     <link rel="stylesheet" href="../assets/css/admin/crud-style.css">
     <script src="../assets/js/admin.js"></script>
+    <title>CRUD</title>
 </head>
 <body>
     <div class="page-container">

@@ -1199,24 +1199,19 @@ Pricing-Page
 
 
 .basic .pricing-info, .plus .pricing-info, .pro .pricing-info{
+  width: 80%;
   color: #10162fd2;
   display: flex;
   justify-content: center;
   position: absolute;
   margin-top: 50px;
+  margin-left:35px;
   text-align: center;
   line-height: 1.4;
   white-space: pre-wrap;
   font-size: 95%;
   letter-spacing: 0.3px;
   bottom:30%;
-  left:19%;
-}
-.plus .pricing-info{
-  left: 20%;
-}
-.pro .pricing-info{
-  left: 16%;
 }
 
 

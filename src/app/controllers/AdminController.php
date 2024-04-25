@@ -16,4 +16,7 @@ class AdminController extends Controller{
     public function adminSearch(){
         $this->renderAdmin('search');
     }
+    public function adminQuery(){
+        $this->renderAdmin('query');
+    }
 }

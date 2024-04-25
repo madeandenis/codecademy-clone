@@ -25,6 +25,13 @@ class FlashMessage{
                 }
             }
         }
+        // LogoutMessage
+        if (isset($_SESSION['success_logout'])) {
+            echo '<div class="success-container">';
+            echo '<li class="success">' . '<span>&#10004;</span>' . $_SESSION['success_logout'] . '</li>';
+            echo '</div>';
+            unset($_SESSION['success_logout']);
+        }
     }
     public function displayErrorMessage(){
         Session::start();

@@ -20,12 +20,27 @@ class MySqlManager {
         self::$password = parse_ini_file($configFilePath)["DB_PASSWORD"];
     }
 
+    public static function executeQuery($query, $pdo){
+        try {
+            $stmt = $pdo->prepare($query);
+            
+            $stmt->execute();
+            
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            return $result;
+
+        } catch (PDOException $e) {
+            return [ "Error" => $e->getMessage() ]; 
+        }
+    }
+
     // Getters
 
     public static function getConnection(): PDO {
         if (self::$pdo === null) {
             self::initializeConfig();
-
+            
             // Data source name
             $dsn = "mysql:host=" . self::$host . ";dbname=" . self::$db_name . ";charset=utf8mb4";
             
@@ -38,6 +53,20 @@ class MySqlManager {
             }
         }
         return self::$pdo;
+    }
+
+    public static function getSchemaConnection($db_name): PDO{
+        $dsn = "mysql:host=" . self::$host . ";dbname=" . $db_name . ";charset=utf8mb4";
+            
+        try {
+            $pdo = new PDO($dsn, self::$username, self::$password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]);
+        } catch (PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
+        }
+
+        return $pdo;
     }
 
     public static function getHostInfo($pdo) {
@@ -95,64 +124,116 @@ class MySqlManager {
         return $associativeTables;
     }
 
-    // Credit: https://stackoverflow.com/questions/639531/search-text-in-fields-in-every-table-of-a-mysql-database
-    public static function searchData($searchQuery, $pdo) {
-        $out = "";
-        $total = 0;
+    public static function getProcedures($pdo, $schema_name) {
+        $procedures = [];
+    
+        $sql = "SELECT ROUTINE_NAME, ROUTINE_DEFINITION
+                FROM INFORMATION_SCHEMA.ROUTINES
+                WHERE ROUTINE_SCHEMA = ?
+                AND ROUTINE_TYPE = 'PROCEDURE'";
+    
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$schema_name]);
+    
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $procedures[] = [
+                'name' => $row['ROUTINE_NAME'],
+                'definition' => $row['ROUTINE_DEFINITION']
+            ];
+        }
+    
+        return $procedures;
+    }
+
+    public static function getFunctions($pdo, $schema_name) {
+        $functions = [];
+    
+        $sql = "SELECT ROUTINE_NAME, ROUTINE_DEFINITION
+                FROM INFORMATION_SCHEMA.ROUTINES
+                WHERE ROUTINE_SCHEMA = ?
+                AND ROUTINE_TYPE = 'FUNCTION'";
+    
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$schema_name]);
+    
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $functions[] = [
+                'name' => $row['ROUTINE_NAME'],
+                'definition' => $row['ROUTINE_DEFINITION']
+            ];
+        }
+    
+        return $functions;
+    }
+
+   public static function searchData($searchQuery) {
+        $out = [];
         
         try {
-            // Retrieve all table names
-            $tablesStmt = $pdo->query("SHOW TABLES");
-            $tables = $tablesStmt->fetchAll(PDO::FETCH_COLUMN);
-            
-            // Loop through each table
-            foreach ($tables as $table) {
-                // Retrieve column names for the current table
-                $columnsStmt = $pdo->prepare("SHOW COLUMNS FROM `$table`");
-                $columnsStmt->execute();
-                $columns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN);
-                
-                if (!empty($columns)) {
-                    $sql_search_fields = [];
-                    
-                    // Build the WHERE clause for searching in each column
-                    foreach ($columns as $column) {
-                        $sql_search_fields[] = "`$column` LIKE ?";
-                    }
-                    
-                    // Construct the search query
-                    $sql_search = "SELECT * FROM `$table` WHERE " . implode(" OR ", $sql_search_fields);
-                    
-                    // Prepare and execute the search query
-                    $searchStmt = $pdo->prepare($sql_search);
-                    
-                    // Bind the search parameter (with wildcards) to each column condition
-                    $searchParam = '%' . $searchQuery . '%';
-                    $params = array_fill(0, count($columns), $searchParam);
-                    $searchStmt->execute($params);
-                    
-                    // Fetch the search results
-                    $rows = $searchStmt->fetchAll(PDO::FETCH_ASSOC);
-                    $rowCount = count($rows);
-                    
-                    if ($rowCount > 0) {
-                        $out .= "$table: $rowCount\n";
-                        $out .= print_r($rows, true) . "\n";
-                        $total += $rowCount;
+            $schemas = self::getSchemas(self::getConnection());
+
+            foreach ($schemas as $schema) {
+                $pdo = self::getSchemaConnection($schema);
+                $tables = self::getTables($schema, $pdo);
+
+                // Loop through each table
+                foreach ($tables as $table) {
+                    try {
+                        // Retrieve column names for the current table
+                        $columnsStmt = $pdo->prepare("SHOW COLUMNS FROM `$table`");
+                        $columnsStmt->execute();
+                        $columns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN);
+                        
+                        if (!empty($columns)) {
+                            $sql_search_fields = [];
+                            
+                            // Build the WHERE clause for searching in each column
+                            foreach ($columns as $column) {
+                                $sql_search_fields[] = "`$column` LIKE ?";
+                            }
+                            
+                            // Construct the search query
+                            $sql_search = "SELECT * FROM `$table` WHERE " . implode(" OR ", $sql_search_fields);
+                            
+                            // Prepare and execute the search query
+                            $searchStmt = $pdo->prepare($sql_search);
+                            
+                            // Bind the search parameter (with wildcards) to each column condition
+                            $searchParam = '%' . $searchQuery . '%';
+                            
+                            foreach ($columns as $index => $column) {
+                                $paramIndex = $index + 1; 
+                                $searchStmt->bindValue($paramIndex, $searchParam, PDO::PARAM_STR);
+                            }
+
+                            // Execute the search query
+                            $searchStmt->execute();
+                            
+                            // Fetch the search results
+                            $rows = $searchStmt->fetchAll(PDO::FETCH_ASSOC);
+                            $rowCount = count($rows);
+                            
+                            if ($rowCount > 0) {
+                                $out[$schema][$table]['rowCount'] = $rowCount;
+                                $out[$schema][$table]['rows'] = $rows;
+                            }
+                        }
+                    } catch (PDOException $ex) {
+                        // Handle the exception (e.g., log the error, but continue with the next table)
+                        $out[$schema][$table]['error']= $ex->getMessage();
                     }
                 }
+                
             }
-            
-            $out .= "\nTotal results: $total";
         } catch (PDOException $e) {
             $out = ["Error" => $e->getMessage()];
         }
         
         return $out;
     }
+
+
     
-    
-    // Insertion/Update Database 
     public static function insertData($pdo, $schema_name, $table_name, $column_names, $column_values) {
         if (empty($column_names) || empty($column_values)) {
             return [ "Error" => "Column names or values are empty." ];

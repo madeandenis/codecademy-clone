@@ -1,3 +1,9 @@
+// Global Variables
+// current Schema/Table in scope
+var currSchema; 
+var currTable;
+
+
 // PubSub pattern implementation
 const subscribers = {};
 
@@ -16,10 +22,6 @@ function publish(eventName, data) {
     }
 }
 
-// For testing
-var currSchema;
-var currTable;
-
 // Event handlers
 function setSchemaInUse(event) {
     const schemaName = event.currentTarget.innerHTML;
@@ -32,6 +34,10 @@ function setTableInUse(event) {
     currTable = tableName;
     publish('tableChange', tableName);
 }
+
+/**
+ * Sidebar logic
+ */
 
 function hideCurrentTable() {
     const tableArrowIcon = document.querySelector('#table-arrows');
@@ -94,7 +100,12 @@ function toggleSchemaTables(event) {
     }
 }
 
-// CRUD Operations
+
+/**
+ *
+ * Call Api endpoints using get/post methods 
+ *  
+ */
 function callPostAPI(action, params, callback) {
     // Base api path
     const apiUrl = '/api/' + action;
@@ -124,7 +135,6 @@ function callPostAPI(action, params, callback) {
 }
 
 function callGetAPI(action, params, callback){
-    // Base api path
     apiUrl = '/api/' + action;
     
     if (params && Object.keys(params).length > 0) {
@@ -157,6 +167,7 @@ function callGetAPI(action, params, callback){
         });
 }
 
+// Renders table nodes for a schema node in the database tree (sidebar)
 function renderTableOptions(event){
     const schema_name = event.currentTarget.innerHTML;
     callGetAPI('getTables', {schema:schema_name}, function(response) {
@@ -180,9 +191,14 @@ function renderTableOptions(event){
     });
 }
 
+/**
+ * Table Manager Methods
+ */
+
+// Displays table content (accessed trough 'Refresh' button) by building a table 
 function displayTableContent(){
     callGetAPI('getTableData', {schema:currSchema, table:currTable}, function(response) {
-        buildTable(response);
+        buildCrudTable(response);
     });
     
 }
@@ -196,14 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// TEST ONLY
-// callGetAPI('getTableData', {schema:'library_db', table:'customers'}, function(response) {
-//     currSchema = 'library_db';
-//     currTable = 'customers';
-//     buildTable(response);
-// });
-
-function buildTable(data) {
+// Builds table displayed in crud section 
+function buildCrudTable(data) {
     const tableContainer = document.getElementById('crud-table-container');
     tableContainer.innerHTML = '';
 
@@ -290,10 +300,28 @@ function buildTable(data) {
 
 }
 
+// Checks (selects) all checkboxes by selecting the table header checkbox 
+function selectAllCheckboxes() {
+    const headerCheckboxCell = document.getElementById('headerCheckbox');
+    const headerCheckbox = headerCheckboxCell.querySelector('.checkbox');
+    const rowCheckboxes = document.querySelectorAll('.checkbox');
+
+    headerCheckbox.addEventListener('change', function() {
+        const isChecked = headerCheckbox.checked;
+        rowCheckboxes.forEach(checkbox => {
+            checkbox.checked = isChecked;
+        });
+    });
+}
 
 
-// Modal Section -> Builder & Open modal
+/**
+ *
+ * Modals Methods
+ *  
+ */
 
+// Base method for building an modal
 function buildModal(columns, columnValues = []) {
     let modalBuilder = `
         <div class="modal-form-container">
@@ -318,6 +346,7 @@ function buildModal(columns, columnValues = []) {
     return modalBuilder;
 }
 
+// Builds Insert modal 
 function insertModal(table, columns) {
     let insertModal = `
         <div class="modal-header">
@@ -338,6 +367,7 @@ function insertModal(table, columns) {
     return insertModal;
 }
 
+// Builds Update modal
 function updateModal(table, columns, columnValues) {
     let updateModal = `
         <div class="modal-header">
@@ -358,6 +388,7 @@ function updateModal(table, columns, columnValues) {
     return updateModal;
 }
 
+// Builds Delete modal
 function deleteModal(table) {
     let deleteModal = `
         <div class="modal-header">
@@ -379,7 +410,8 @@ function deleteModal(table) {
     return deleteModal;
 }
 
-function rebuildTable(rowIds) {
+// Builds an table given the row IDs for the delete modal
+function buildTableFromSelectedRows(rowIds) {
     // Create a new table element
     const rebuiltTable = document.createElement('table');
     const tableBody = document.createElement('tbody');
@@ -418,6 +450,7 @@ function rebuildTable(rowIds) {
     }
 }
 
+// Extract column names from displayed table in the crud page 
 function getCurrentTableColumns() {
     const tableHeaderRow = document.querySelector('#crud-table thead tr'); 
 
@@ -436,6 +469,7 @@ function getCurrentTableColumns() {
 
     return columns;
 }
+// Extract row values from the given row IDs  
 function getRowValues(rowId){
     const row = document.getElementById(rowId);
 
@@ -455,8 +489,10 @@ function getRowValues(rowId){
     return values;
 }
 
+/**
+ * Methods for building and displaying modals
+ */
 
-// Open Modals -> Insert Modal
 function openInsertModal(){
     const modalsContainer = document.getElementById('crud-modals')
     const createDataModal = document.getElementById('create-data-modal');
@@ -465,7 +501,6 @@ function openInsertModal(){
     createDataModal.style.display = 'block';
 }
 
-// Open Update Modal
 function openUpdateModal(event){
     const modalsContainer = document.getElementById('crud-modals')
     const updateDataModal = document.getElementById('create-data-modal');
@@ -478,20 +513,35 @@ function openUpdateModal(event){
 
 }
 
-// Open Delete Modal
+// Multiple Rows Delete Modal
 function openDeleteModal(event){
     const modalsContainer = document.getElementById('crud-modals')
     const deleteDataModal = document.getElementById('delete-data-modal');
 
     deleteDataModal.innerHTML = deleteModal(currTable);
-    rebuildTable(getAllSelectedRowsID());
+    buildTableFromSelectedRows(getAllSelectedRowsID());
     modalsContainer.style.display = 'block';
     deleteDataModal.style.display = 'block';
 
     deleteModal(currTable,getAllSelectedRowsID());
 } 
 
-// Delete Modal
+// Return row ids for the rows that have checkboxes checked 
+function getAllSelectedRowsID(){
+    let selectedRows = [];
+    const checkboxes = document.querySelectorAll('.checkbox');
+    
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            let row = checkbox.closest('tr');
+            selectedRows.push(row.id);
+        }
+    });
+
+    return selectedRows;
+}
+
+// Single Row Delete Modal
 function openDeleteSingleRowModal(event){
     const modalsContainer = document.getElementById('crud-modals')
     const deleteDataModal = document.getElementById('delete-data-modal');
@@ -499,7 +549,7 @@ function openDeleteSingleRowModal(event){
     rowId = event.currentTarget.parentElement.parentElement.id;
 
     deleteDataModal.innerHTML = deleteModal(currTable,[rowId]);
-    rebuildTable([rowId]);
+    buildTableFromSelectedRows([rowId]);
 
     modalsContainer.style.display = 'block';
     deleteDataModal.style.display = 'block';
@@ -515,8 +565,11 @@ function closeModal(){
     });   
 }
 
+/**
+ * Make API calls for CRUD operations   
+ */
 
-// Update Database 
+// Base method for insertDatabase and updateDatabase
 function handleDatabaseOperation(event, operationType) {
     const currentModal = event.currentTarget.parentElement.parentElement;
     const formData = new FormData(currentModal.querySelector('#modal-form'));
@@ -557,9 +610,9 @@ function deleteFromDatabase(){
     const idsToDelete = [];
 
     rowsToDelete.forEach(row => {
-        const idCell = row.querySelectorAll('td')[1]; // Assuming the ID cell is the second cell in each row
+        const idCell = row.querySelectorAll('td')[1]; 
         if (idCell) {
-            idsToDelete.push(idCell.textContent.trim()); // Assuming the ID is stored in the cell's text content
+            idsToDelete.push(idCell.textContent.trim()); 
         }
     });
 
@@ -570,9 +623,11 @@ function deleteFromDatabase(){
     });
 }
 
+/**
+ * Flash Messages based on the action performed results  
+ */
 
 function flashMessage(textContent) {
-    // Activate dark background
     const modalsContainer = document.getElementById('crud-modals');
     modalsContainer.style.display = 'block';
 
@@ -597,42 +652,224 @@ function flashMessage(textContent) {
         document.body.removeChild(messageBox); 
         modalsContainer.style.display = 'none';
     }, timeOut); 
-}
-
-// Table actions 
-function selectAllCheckboxes() {
-    const headerCheckboxCell = document.getElementById('headerCheckbox');
-    const headerCheckbox = headerCheckboxCell.querySelector('.checkbox');
-    const rowCheckboxes = document.querySelectorAll('.checkbox');
-
-    headerCheckbox.addEventListener('change', function() {
-        const isChecked = headerCheckbox.checked;
-        rowCheckboxes.forEach(checkbox => {
-            checkbox.checked = isChecked;
-        });
-    });
-}
-
-function getAllSelectedRowsID(){
-    let selectedRows = [];
-    const checkboxes = document.querySelectorAll('.checkbox');
-    
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            let row = checkbox.closest('tr');
-            selectedRows.push(row.id);
-        }
-    });
-
-    return selectedRows;
-}
+} 
 
 
-// SearchSubmit
+/**
+ * 
+ * Search Page Methods
+ * 
+ */
+
+var searchResponse;
+var hideErrors;
+
+// Call Search API based on the input element
 function submitSearch(event){
     event.preventDefault();
     const searchInput = document.getElementById('search').value;
     callGetAPI('search',{'searchQuery' : searchInput},function(response) {
-        console.log(response);
+        searchResponse = response;
+        buildSearchResultTables();
     })
+}
+
+// Drop errors generated in the process 
+function toggleHideErrors(){
+    hideErrors = !hideErrors;
+    
+    buildSearchResultTables();
+
+    // Remove empty table containers
+    const tableContainers = document.querySelectorAll('.table-container');
+    tableContainers.forEach(tableContainer => {
+        if (tableContainer.children.length === 1) {
+            tableContainer.remove();
+        }
+    });
+}
+
+// Builds schema containers -> table containers -> which have values associated with the search 
+function buildSearchResultTables() {
+    const container = document.getElementById('searchTablesContainer');
+    container.innerHTML = '';
+
+    // Iterate over each schema in the JSON data
+    for (const schemaName in searchResponse) {
+        const schemaData = searchResponse[schemaName];
+
+        // Create a div for the entire schema
+        const schemaDiv = document.createElement('div');
+        schemaDiv.classList.add('schema-container'); // Add class for styling
+        container.appendChild(schemaDiv);
+
+        // Create a heading for the schema
+        const schemaHeading = document.createElement('h3');
+        schemaHeading.innerHTML = `<i class="fas fa-database"></i> ${schemaName}`;
+        schemaDiv.appendChild(schemaHeading);
+
+        // Iterate over each table in the schema data
+        for (const tableName in schemaData) {
+            const tableData = schemaData[tableName];
+
+            // Create a div for each table
+            const tableDiv = document.createElement('div');
+            tableDiv.classList.add('table-container'); // Add class for styling
+            schemaDiv.appendChild(tableDiv);
+
+            // Create a heading for the table
+            const tableHeading = document.createElement('h4');
+            tableHeading.innerHTML = `<i class="fas fa-table"></i> ${tableName}: `;
+            tableDiv.appendChild(tableHeading);
+
+            if (tableData.error && !hideErrors) {
+                // If there is an error, display the error message in a paragraph
+                const errorParagraph = document.createElement('p');
+                errorParagraph.textContent = `Error: ${tableData.error}`;
+                tableDiv.appendChild(errorParagraph);
+            } else if (tableData.rows && tableData.rows.length > 0) {
+                // Create a span to display the number of results
+                const resultSpan = document.createElement('span');
+                resultSpan.textContent = `${tableData.rows.length} results`;
+                tableHeading.appendChild(resultSpan);
+
+                // Create a table element
+                const table = document.createElement('table');
+                tableDiv.appendChild(table);
+
+                // Create table header row
+                const headerRow = table.createTHead().insertRow();
+                for (const key in tableData.rows[0]) {
+                    const th = document.createElement('th');
+                    th.textContent = key;
+                    headerRow.appendChild(th);
+                }
+
+                // Create table body rows
+                const tbody = table.createTBody();
+                tableData.rows.forEach(rowData => {
+                    const row = tbody.insertRow();
+                    for (const key in rowData) {
+                        const cell = row.insertCell();
+                        cell.textContent = rowData[key];
+                    }
+                });
+            }
+        }
+    }
+}
+
+/**
+ *
+ *  Query Page
+ *  
+ */
+
+function buildQueryResultTable(data) {
+    const table = document.createElement('table');
+    table.id = 'responseTable';
+
+    const headerRow = table.createTHead().insertRow();
+    
+    // Check if data[0] is an object
+    if (typeof data[0] !== 'object' || data[0] === null) {
+        console.error('Invalid data format: data[0] is not an object or is null.');
+        return table; // Return table with header row only
+    }
+
+    // Create table header with keys from the first object in the data array
+    Object.keys(data[0]).forEach(key => {
+        const headerCell = document.createElement('th');
+        headerCell.textContent = key;
+        headerRow.appendChild(headerCell);
+    });
+
+    const tableBody = table.createTBody();
+
+    data.forEach(item => {
+        // Check if item is an object
+        if (typeof item === 'object' && item !== null) {
+            const row = tableBody.insertRow();
+            // Populate cells with values from the current item
+            Object.values(item).forEach(value => {
+                const cell = row.insertCell();
+                cell.textContent = value;
+            });
+        } else {
+            console.warn('Skipping invalid item in data array:', item);
+        }
+    });
+
+    return table;
+}
+
+// Submits query to the query end point 
+// In case special commands are executed it calls other api endpoints (fetchProcedures,fetchFunctions)
+function submitQuery(event) {
+    event.preventDefault();
+    const queryTerminal = document.getElementById('query');
+    const query = queryTerminal.textContent.trim(); 
+
+    if (query.includes('list procedures')) {
+        const schema_name = query.split(' ').pop().trim();
+        console.log(schema_name);
+        callGetAPI('fetchProcedures', { schema: schema_name }, function (procedures) {
+            queryTerminal.innerHTML += '<br>';
+            procedures.forEach(procedure => {
+                queryTerminal.innerHTML += `[Procedure] <span style="color: #73C873;">${procedure.name}</span><br>`;
+            });
+        });
+    }
+    else if (query.includes('list functions')) {
+        const schema_name = query.split(' ').pop().trim();
+        console.log(schema_name);
+        callGetAPI('fetchFunctions', { schema: schema_name }, function (functions) {
+            queryTerminal.innerHTML += '<br>'; 
+            functions.forEach(functionResponse => {
+                queryTerminal.innerHTML += `[Functions] <span style="color: #73C873;">${functionResponse.name}</span><br>`;
+            });
+        });
+    }
+    else {
+        callGetAPI('query', { query: query }, function (response) {
+            console.log(response);
+            if (response.Error) {
+                queryTerminal.innerHTML += `<div style="color: #c9473e;">${response.Error}</div>`;
+            } else {
+                const tableContainer = document.createElement('div');
+                const table = buildQueryResultTable(response, 'responseTable');
+                tableContainer.appendChild(table);
+                queryTerminal.appendChild(tableContainer);
+            }
+        });   
+    }
+
+}
+
+/**
+ * 
+ * Logout Action 
+ * 
+ */
+// Send POST request to logout endpoint
+function logoutUser() {
+    const logoutUrl = 'https://codecademyre.com/logout';
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    };
+
+    fetch(logoutUrl,requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            window.location.href = 'http://codecademyre.com/login';
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+        });
 }

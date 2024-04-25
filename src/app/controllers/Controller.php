@@ -19,6 +19,9 @@ class Controller{
     protected function renderHome($view){
         require $this->viewsPath . "/home/$view.php";
     }
+    protected function renderPricing($view){
+        require $this->viewsPath . "/pricing/$view.php";
+    }
     protected function renderAuth($view){
         require $this->viewsPath . "/auth/$view.php";
     }
@@ -41,6 +44,11 @@ class Controller{
     protected function handleLogin(){
         require $this->middlewarePath . "/handleLogin.php";
     }
+
+    protected function handleLogOut(){
+        require $this->middlewarePath . "/handleLogOut.php";
+    }
+    
     protected function handleRegister(){
         require $this->middlewarePath . "/handleRegister.php";
     }

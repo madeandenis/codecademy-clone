@@ -12,6 +12,9 @@ class AuthController extends Controller{
     public function submitLogin(){
         $this->handleLogin();
     }
+    public function submitLogOut(){
+        $this->handleLogOut();
+    }
     public function submitSignup(){
         $this->handleRegister();
     }
