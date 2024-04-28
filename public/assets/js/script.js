@@ -221,3 +221,4 @@ function goToNextQuestion() {
 
 //Apelam functia
 startQuiz();
+

@@ -22,6 +22,9 @@ class Controller{
     protected function renderPricing($view){
         require $this->viewsPath . "/pricing/$view.php";
     }
+    protected function renderCatalog($view){
+        require $this->viewsPath . "/catalog/$view.php";
+    }
     protected function renderAuth($view){
         require $this->viewsPath . "/auth/$view.php";
     }

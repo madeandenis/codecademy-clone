@@ -1,6 +1,7 @@
 <?php
 
 
+use app\controllers\CatalogController;
 use app\controllers\HomeController;
 use app\controllers\AuthController;
 use app\controllers\AdminController;
@@ -14,6 +15,7 @@ $router = Router::getRouter();
 $router->get('/', HomeController::class, 'index');
 $router->get('/home', HomeController::class, 'index');
 $router->get('/pricing', PricingController::class, 'index');
+$router->get('/catalog', CatalogController::class, 'index');
 
 $router->get('/login', AuthController::class, 'login');
 $router->post('/login', AuthController::class, 'submitLogin');
@@ -33,6 +35,7 @@ $router->get('/admin/query', AdminController::class, 'adminQuery');
 // API route
 $router->get('/api/getTables', ApiController::class, 'getTables');
 $router->get('/api/getTableData', ApiController::class, 'getTableData');
+$router->get('/api/getCourses', ApiController::class, 'getCourses');
 $router->get('/api/fetchProcedures', ApiController::class, 'fetchProcedures');
 $router->get('/api/fetchFunctions', ApiController::class, 'fetchFunctions');
 $router->get('/api/search', ApiController::class, 'search');

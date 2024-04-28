@@ -176,10 +176,8 @@ class MySqlManager {
                 $pdo = self::getSchemaConnection($schema);
                 $tables = self::getTables($schema, $pdo);
 
-                // Loop through each table
                 foreach ($tables as $table) {
                     try {
-                        // Retrieve column names for the current table
                         $columnsStmt = $pdo->prepare("SHOW COLUMNS FROM `$table`");
                         $columnsStmt->execute();
                         $columns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN);
@@ -187,18 +185,14 @@ class MySqlManager {
                         if (!empty($columns)) {
                             $sql_search_fields = [];
                             
-                            // Build the WHERE clause for searching in each column
                             foreach ($columns as $column) {
                                 $sql_search_fields[] = "`$column` LIKE ?";
                             }
                             
-                            // Construct the search query
                             $sql_search = "SELECT * FROM `$table` WHERE " . implode(" OR ", $sql_search_fields);
                             
-                            // Prepare and execute the search query
                             $searchStmt = $pdo->prepare($sql_search);
                             
-                            // Bind the search parameter (with wildcards) to each column condition
                             $searchParam = '%' . $searchQuery . '%';
                             
                             foreach ($columns as $index => $column) {
@@ -206,10 +200,8 @@ class MySqlManager {
                                 $searchStmt->bindValue($paramIndex, $searchParam, PDO::PARAM_STR);
                             }
 
-                            // Execute the search query
                             $searchStmt->execute();
                             
-                            // Fetch the search results
                             $rows = $searchStmt->fetchAll(PDO::FETCH_ASSOC);
                             $rowCount = count($rows);
                             
@@ -219,7 +211,6 @@ class MySqlManager {
                             }
                         }
                     } catch (PDOException $ex) {
-                        // Handle the exception (e.g., log the error, but continue with the next table)
                         $out[$schema][$table]['error']= $ex->getMessage();
                     }
                 }

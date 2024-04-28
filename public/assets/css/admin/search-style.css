@@ -1,0 +1,128 @@
+
+form {
+    background-color: #15161d;
+    width: 400px;
+    height: 44px;
+    border-radius: 5px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+}
+
+input {
+    all: unset;
+    font: 16px system-ui;
+    color: #fff;
+    height: 100%;
+    width: 100%;
+    padding: 6px 10px;
+}
+
+::placeholder {
+    color: #fff;
+    opacity: 0.7; 
+}
+
+svg {
+    color: #fff;
+    fill: currentColor;
+    width: 24px;
+    height: 24px;
+    padding: 10px;
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+}
+
+/* Result Search Tables */
+#searchTablesContainer {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.885); 
+}
+#searchTablesContainer table {
+    width: 100%;
+    border-collapse: collapse;
+}
+#searchTablesContainer th {
+    font-size: 12px;
+    padding: 10px 20px;
+    border-bottom: 1px rgba(255, 255, 255, 0.178) solid;
+    background-color: #111112; 
+}
+#searchTablesContainer th:first-child{
+    border-radius: 12px 0px 0px 0px; 
+}
+#searchTablesContainer th:last-child{
+    border-radius: 0px 12px 0px 0px; 
+}
+
+#searchTablesContainer th, #searchTablesContainer td {
+    font-size: 12px;
+    padding: 10px;
+    text-align: left;
+    border: none; 
+}
+
+#searchTablesContainer td:hover {
+    background-color: #111112;
+}
+
+#searchTablesContainer tr:last-child td:first-child{
+    border-radius: 0px 0px 0px 12px; 
+}
+#searchTablesContainer tr:last-child td:last-child{
+    border-radius: 0px 0px 12px 0px; 
+}
+#searchTablesContainer tr:nth-child(odd){
+    background-color: #15161d93;
+}
+#searchTablesContainer tr:nth-child(even){
+    background-color: #15161d;
+}
+
+/* Error paragraph */
+#searchTablesContainer p {
+    color: #c9473e;
+}
+/* Table Results */
+#searchTablesContainer h4 span{
+    color: #73C873; 
+    font-size: 15px;
+    font-weight: 500;
+}
+#searchTablesContainer i {
+    padding-left: 7px;
+    padding-right: 7px;
+}
+
+.schema-container {
+    margin-bottom: 20px; 
+    padding: 10px;
+    background-color: #15161d; 
+}
+
+.table-container {
+    margin-top: 10px; 
+    padding: 10px;
+    background: linear-gradient(45deg, hsla(224, 22%, 13%, 1) 0%, hsla(238, 34%, 17%, 1) 100%);
+}
+
+#searchContainer{
+    font: 16px system-ui;
+    display: flex;
+    margin-top: 40px;
+}
+
+#hideErrorsBtn{
+    width: 80px;
+    border-radius: 5px;
+    margin-left: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: whitesmoke;
+    background-color: #c9473e6e;
+}

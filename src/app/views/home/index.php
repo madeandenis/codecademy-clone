@@ -46,12 +46,14 @@
     <section class="course-section">
       <?php 
         $courseSection = new CourseSection(MySqlManager::getConnection());
-        $courseSection->displayFreeCourses($courseSection->getFreeCourses());
+        $courseSection->displayCourses($courseSection->getCourses(limit:8));
       ?>
     </section>
 
     <div class="course-heading-title">  
-        <button class="link-button">Explore Full Catalog</button>
+        <a href="http://codecademyre.com/catalog">
+          <button class="link-button">Explore Full Catalog</button>
+        </a>
     </div>
 
     <section class="join-section">
