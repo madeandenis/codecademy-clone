@@ -25,6 +25,9 @@ class Controller{
     protected function renderCatalog($view){
         require $this->viewsPath . "/catalog/$view.php";
     }
+    protected function renderErrors($view){
+        require $this->viewsPath . "/errors/$view.php";
+    }
     protected function renderAuth($view){
         require $this->viewsPath . "/auth/$view.php";
     }
@@ -54,5 +57,8 @@ class Controller{
     
     protected function handleRegister(){
         require $this->middlewarePath . "/handleRegister.php";
+    }
+    protected function handleEnrollment(){
+        require $this->middlewarePath . "/handleEnrollment.php";
     }
 }

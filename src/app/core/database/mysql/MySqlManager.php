@@ -223,12 +223,22 @@ class MySqlManager {
         return $out;
     }
 
-
+    public static function deactivateKeyConstraints(PDO $pdo, string $schema_name, string $table_name) {
+        try {
+            $query = "SET FOREIGN_KEY_CHECKS=0";
+            $pdo->exec($query);
+            return "Key constraints deactivated successfully.";
+        } catch (PDOException $e) {
+            return "Failed to deactivate key constraints: ";
+        }
+    }
     
     public static function insertData($pdo, $schema_name, $table_name, $column_names, $column_values) {
         if (empty($column_names) || empty($column_values)) {
             return [ "Error" => "Column names or values are empty." ];
         }
+
+        $keyConstraintsMsg = MySqlManager::deactivateKeyConstraints($pdo, $schema_name, $table_name);
 
         $columnsString = implode(', ', $column_names);
         $valuePlaceholders = substr(str_repeat(' ? ,',count($column_names)), 0, -1);
@@ -251,7 +261,7 @@ class MySqlManager {
 
             $pdo->commit();
             
-            return [ "Success" => "Data inserted successfully. $rowCount row(s) affected." ];
+            return [ "Success" => "<br>" . $keyConstraintsMsg . "<br> Data inserted successfully. $rowCount row(s) affected." ];
 
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -264,6 +274,8 @@ class MySqlManager {
         if (empty($column_names) || empty($column_values)) {
             return [ "Error" => "Column names or values are empty." ];
         }
+
+        $keyConstraintsMsg = MySqlManager::deactivateKeyConstraints($pdo, $schema_name, $table_name);
     
         // Modify var names for final proj.
         $setClause = '';
@@ -296,7 +308,7 @@ class MySqlManager {
     
             $pdo->commit();
     
-            return [ "Success" => "Data updated successfully. $rowCount row(s) affected." ];
+            return [ "Success" => "<br>" . $keyConstraintsMsg . "<br> Data updated successfully. $rowCount row(s) affected." ];
     
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -309,7 +321,9 @@ class MySqlManager {
         if (empty($column_name) || empty($column_values)) {
             return [ "Error" => "Column name or values are empty." ];
         }
-    
+
+        $keyConstraintsMsg = MySqlManager::deactivateKeyConstraints($pdo, $schema_name, $table_name);
+
         $placeholders = implode(',', array_fill(0, count($column_values), '?'));
     
         $deleteQuery = "DELETE FROM `$schema_name`.`$table_name` WHERE `$column_name` IN ($placeholders)";
@@ -330,7 +344,7 @@ class MySqlManager {
     
             $pdo->commit();
     
-            return [ "Success" => "Data deleted successfully. $rowCount row(s) affected." ];
+            return [ "Success" => "<br>" . $keyConstraintsMsg . "<br> Data deleted successfully. $rowCount row(s) affected." ];
     
         } catch (PDOException $e) {
             $pdo->rollBack();

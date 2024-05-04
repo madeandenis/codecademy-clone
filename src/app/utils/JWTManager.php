@@ -57,6 +57,17 @@ class JWTManager{
     public function getExpDuration(){
         return $this->expDuration;
     }
+    public function getUsername($token){
+        try{
+            $decodedToken = $this->validateToken($token);
+            if(isset($decodedToken->context->username)){
+                return $decodedToken->context->username;
+            }
+        } catch (JWTException $e){
+            return null;
+        }
+        return null;
+    }
     public function getUserRoles($token){
         try{
             $decodedToken = $this->validateToken($token);

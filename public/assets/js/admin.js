@@ -109,7 +109,6 @@ function toggleSchemaTables(event) {
 function callPostAPI(action, params, callback) {
     // Base api path
     const apiUrl = '/api/' + action;
-    params.action = action;
 
     const requestOptions = {
         method: 'POST',

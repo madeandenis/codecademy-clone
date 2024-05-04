@@ -37,7 +37,7 @@ class CourseSection
 
             foreach ($results as $result) {
                 $courses[] = new Course(
-                    $result['id'],
+                    $result['course_id'],
                     $result['title'],
                     $result['description'],
                     $result['difficulty'],
