@@ -1,15 +1,21 @@
 <?php
 
 namespace app\controllers;
+
 use app\components\public\CourseSection;
+use app\core\database\MongoDBManager;
 use app\core\database\mysql\MySqlManager;
+use app\repositories\UserRepository;
+use app\utils\JWTManager;
 use app\utils\StreamVideo;
 
-class ApiController extends Controller{
-   
+class ApiController extends Controller
+{
+
     // GET Methods
-    public function getTables(){
-        if(isset($_GET['schema'])){
+    public function getTables()
+    {
+        if (isset($_GET['schema'])) {
             $schema_name = $_GET['schema'];
             echo json_encode(MySqlManager::getTables($schema_name, MySqlManager::getConnection()));
             unset($_GET['schema']);
@@ -65,15 +71,52 @@ class ApiController extends Controller{
         }
     }
 
+
     public function fetchVideo()
     {
-        if (isset($_GET['video_src'])) {
-            $video_src = $_GET['video_src'];
-            echo json_encode(StreamVideo::streamVideo($video_src));
-            unset($_GET['video_src']);
-            exit;
+        if (!isset($_GET['video_src'])) {
+            return;
         }
+
+        $video_src = $_GET['video_src'];
+
+        $linkedCourses = MySqlManager::getCourseIDsFromVideoSource(MySqlManager::getConnection(), $video_src);
+
+        if (!isset($_COOKIE["jwtToken"])) {
+            return;
+        }
+
+        $jwtToken = $_COOKIE["jwtToken"];
+        $jwtManager = new JWTManager();
+        $username = $jwtManager->getUsername($jwtToken);
+
+        $userCollection = MongoDBManager::getCollection('userdb', 'users');
+        $userRepository = new UserRepository($userCollection);
+        $user = $userRepository->getUserByUsername($username);
+
+        // Get user's enrolled courses
+        $userEnrolledCourses = isset($user['enrollment_keys']) ? $this->bsonArrayToArray($user['enrollment_keys']) : [];
+
+        // Check if user is enrolled in any of the linked courses
+        $intersect = array_intersect($linkedCourses, $userEnrolledCourses);
+
+        if (!empty($intersect)) {
+            echo json_encode(StreamVideo::streamVideo($video_src));
+        }
+
+        unset($_GET['video_src']);
+        exit;
     }
+
+    function bsonArrayToArray($bsonArray)
+    {
+        $result = [];
+        foreach ($bsonArray as $value) {
+            $result[] = $value;
+        }
+        return $result;
+    }
+
 
     public function query()
     {
@@ -85,37 +128,44 @@ class ApiController extends Controller{
         }
     }
 
-     // POST Methods
-     private function getBodyParams(){
+    // POST Methods
+    private function getBodyParams()
+    {
         $requestBody = file_get_contents('php://input');
         $params = json_decode($requestBody, true);
         return $params;
     }
-    private function getSchemaName(){
+    private function getSchemaName()
+    {
         return $this->getBodyParams()['schema'];
     }
-    private function getTableName(){
+    private function getTableName()
+    {
         return $this->getBodyParams()['table'];
     }
-    private function getColumnNames(){
+    private function getColumnNames()
+    {
         $params = $this->getBodyParams();
         unset($params['schema'], $params['table']);
         return array_keys($params);
     }
-    private function getColumnValues(){
+    private function getColumnValues()
+    {
         $params = $this->getBodyParams();
         unset($params['schema'], $params['table']);
         return array_values($params);
     }
-    public function insertDatabase(){
+    public function insertDatabase()
+    {
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $column_names = $this->getColumnNames();
         $column_values = $this->getColumnValues();
-        
+
         echo json_encode(MySqlManager::insertData(MySqlManager::getConnection(), $schema_name, $table_name, $column_names, $column_values));
     }
-    public function updateDatabase(){
+    public function updateDatabase()
+    {
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $column_names = $this->getColumnNames();
@@ -123,7 +173,8 @@ class ApiController extends Controller{
 
         echo json_encode(MySqlManager::updateData(MySqlManager::getConnection(), $schema_name, $table_name, $column_names, $column_values));
     }
-    public function deleteFromDatabase(){
+    public function deleteFromDatabase()
+    {
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $params = $this->getBodyParams();
