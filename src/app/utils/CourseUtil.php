@@ -112,6 +112,7 @@ class CourseUtil
 
     public function renderCoursePage(Course $course)
     {
+
         $viewsPath = realpath(__DIR__ . '/../views');
         $template = file_get_contents($viewsPath.'/course/course_template.php');
 

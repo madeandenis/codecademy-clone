@@ -1,3 +1,8 @@
+<?php
+  use app\utils\FlashMessage;
+  use app\utils\Session;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,9 +18,6 @@
     <img src="assets/logo/logoBlue.png" alt="Logo" class="logo">
   </a>
   <?php
-    use app\utils\FlashMessage;
-    use app\utils\Session;
-
     $flashMessage = new FlashMessage();
     $flashMessage->setPageType('signup');
     $flashMessage->displayErrorMessage();

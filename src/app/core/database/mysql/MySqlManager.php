@@ -39,7 +39,6 @@ class MySqlManager
     }
 
     // Getters
-
     public static function getConnection(): PDO
     {
         if (self::$pdo === null) {
@@ -172,6 +171,7 @@ class MySqlManager
         return $functions;
     }
 
+    // Query Methods
     public static function searchData($searchQuery)
     {
         $out = [];
@@ -241,6 +241,8 @@ class MySqlManager
         }
     }
 
+    // Insertion Methods
+
     public static function insertData($pdo, $schema_name, $table_name, $column_names, $column_values)
     {
         if (empty($column_names) || empty($column_values)) {
@@ -279,6 +281,17 @@ class MySqlManager
         }
     }
 
+    public static function insertCourse($pdo, $title, $description, $difficulty, $lessonCount, $price, $courseType, $videoSource, $uploadedBy)
+    {
+        $schema_name = 'codecademy';
+        $table_name = 'courses';
+        $column_names = ['title', 'description', 'difficulty', 'lesson_count', 'price', 'course_type', 'video_source', 'uploaded_by'];
+        $column_values = [$title, $description, $difficulty, $lessonCount, $price, $courseType, $videoSource, $uploadedBy];
+
+        return self::insertData($pdo, $schema_name, $table_name, $column_names, $column_values);
+    }
+
+    // Update Methods
     public static function updateData($pdo, $schema_name, $table_name, $column_names, $column_values)
     {
         if (empty($column_names) || empty($column_values)) {
@@ -327,6 +340,7 @@ class MySqlManager
         }
     }
 
+    // Delete Methods
     public static function deleteData($pdo, $schema_name, $table_name, $column_name, $column_values)
     {
         if (empty($column_name) || empty($column_values)) {
@@ -364,7 +378,7 @@ class MySqlManager
         }
     }
 
-    // Api controller utils
+    // Utils
     public static function getCourseIDsFromVideoSource($pdo, $video_src)
     {
 
@@ -379,7 +393,7 @@ class MySqlManager
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $courseIDs[] = $row['course_id'];
         }
-    
+
         return $courseIDs;
 
     }

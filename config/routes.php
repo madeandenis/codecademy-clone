@@ -8,6 +8,7 @@ use app\controllers\AdminController;
 use app\controllers\ApiController;
 use app\controllers\LessonController;
 use app\controllers\PricingController;
+use app\controllers\UploadController;
 use app\core\routing\Router;
 
 $router = Router::getRouter();
@@ -58,3 +59,7 @@ $router->get('/api/fetchVideo', ApiController::class, 'fetchVideo');
 // Course and Lesson routes
 $router->get('/course/(\d+)', CourseController::class, 'getCourse'); 
 $router->get('/course/(\d+)/lesson/(\d+)', LessonController::class, 'getLesson'); 
+
+// Upload course route
+$router->get('/upload', UploadController::class, 'upload'); 
+$router->post('/upload', UploadController::class, 'submitUpload'); 
