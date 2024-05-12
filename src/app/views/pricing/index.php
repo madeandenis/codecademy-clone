@@ -1,7 +1,7 @@
 <?php 
-  use app\components\public\PricingSection;
   use app\core\database\mysql\MySqlManager;
   use app\utils\PublicUI;
+  use app\utils\PricingUtil;
 ?>
 
 <!DOCTYPE html>
@@ -27,8 +27,8 @@
     
     <section class="pricing-section">
         <?php 
-            $pricingSection = new PricingSection(MySqlManager::getConnection());
-            $pricingSection->displayPricePlans($pricingSection->getPricePlans());
+            $pricingUtil = new PricingUtil(MySqlManager::getConnection());
+            $pricingUtil->displayPricePlans($pricingUtil->getPricePlans());
         ?>
     </section>
 

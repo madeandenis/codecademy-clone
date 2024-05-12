@@ -1,12 +1,12 @@
 <?php
 
-namespace app\components\public;
+namespace app\utils;
 
 use app\models\PricePlan;
 use PDO;
 use PDOException;
 
-class PricingSection {
+class PricingUtil {
     private PDO $pdo;
 
     public function __construct(PDO $pdo) {

@@ -76,17 +76,17 @@ subscribe('tableChange', handleTableChange);
 // DOMContentLoaded
 let databaseTree;
 document.addEventListener('DOMContentLoaded', function() {
-    databaseTree = document.getElementById('dbTree');
+    databaseTree = document.getElementById('navigationTree');
 });
 
 // Toggle database tree visibility
-function toggleDbTree() {
+function toggleNavigationTree() {
     const displayState = databaseTree.style.display === 'none' ? 'block' : 'none';
     databaseTree.style.display = displayState;
 }
 
 // Close database tree
-function closeDbTree() {
+function closeNavigationTree() {
     databaseTree.style.display = 'none';
 }
 

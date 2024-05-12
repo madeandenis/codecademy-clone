@@ -1,9 +1,9 @@
 <?php
-use app\components\public\CourseSection;
+use app\utils\CourseUtil;
 use app\core\database\mysql\MySqlManager;
 use app\utils\PublicUI;
 
-$courseSection = new CourseSection(MySqlManager::getConnection());
+$CourseUtil = new CourseUtil(MySqlManager::getConnection());
 ?>
 
 <!DOCTYPE html>

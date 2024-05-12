@@ -25,7 +25,7 @@ class Controller{
     protected function renderCatalog($view){
         require $this->viewsPath . "/catalog/$view.php";
     }
-    protected function renderErrors($view){
+    protected function renderError($view){
         require $this->viewsPath . "/errors/$view.php";
     }
     protected function renderAuth($view){
@@ -39,14 +39,20 @@ class Controller{
                 require $this->viewsPath . "/admin/$view.php";
             }
             else{
-                header("Location: http://codecademyre.com/login");
+                // Forbidden access
+                $this->renderError('403');
             }    
         }
         else{
-            header("Location: http://codecademyre.com/login");
+            $this->redirectToLogin();
         }
     }
-
+    protected function redirectToLogin()
+    {
+        header("Location: http://codecademyre.com/login");
+        exit; 
+    }
+    
     protected function handleLogin(){
         require $this->middlewarePath . "/handleLogin.php";
     }

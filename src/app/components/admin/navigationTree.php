@@ -2,7 +2,7 @@
 
 use app\core\database\mysql\MySqlManager;
 
-function generateSchemaBranches(){
+function generateSchemaNodes(){
     $schemaBranch = '';
 
     $pdo = MySqlManager::getConnection();
@@ -12,9 +12,9 @@ function generateSchemaBranches(){
         $schemaNode = '<li class="schema-node">';
         $schemaNode .= '<span onclick="toggleSchemaTables(event); setSchemaInUse(event); renderTableOptions(event);">'.$schema.'</span>';
         $schemaNode .= '<ul class="tables-list">';
-        foreach($tables as $table){
-            $schemaNode .= '<li class="table-node">'.'<span onclick="setTableInUse(event);">'.$table.'</span>'.'</li>';
-        }
+        
+        generateTableNodes($tables,$schemaNode);
+
         $schemaNode .= '</ul>';
         $schemaNode .= '</li>';
         $schemaBranch .= $schemaNode;
@@ -22,18 +22,22 @@ function generateSchemaBranches(){
 
     return $schemaBranch;
 }
+function generateTableNodes($tables, &$schemaNode){
+    foreach($tables as $table){
+        $schemaNode .= '<li class="table-node">'.'<span onclick="setTableInUse(event);">'.$table.'</span>'.'</li>';
+    }
+}
 
-$dbTree = '
-<ul class="tree" id="dbTree">
+// Outputs navigation tree
+echo '
+<ul class="tree" id="navigationTree">
     <li>
         <details open>
             <summary></summary>
             <ul class="schemas-list">
-                ' . generateSchemaBranches() . '
+                ' . generateSchemaNodes() . '
             </ul>
         </details>
     </li>
 </ul>
 ';
-
-echo $dbTree;

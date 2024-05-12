@@ -3,32 +3,36 @@
 use app\repositories\UserRepository;
 use app\utils\JWTManager;
 use app\utils\Session;
-use app\core\database\MongoDBManager;
+use app\core\database\mongo\MongoDBManager;
 
 Session::start();
 
-// Get the raw POST data
-$inputJSON = file_get_contents('php://input');
-$input = json_decode($inputJSON, true);
+// Json body format
+$requestBody = file_get_contents('php://input');
+$requestData = json_decode($requestBody, true);
 
-if (isset($input['course_id'])) {
-    try {
-        $courseId = $input['course_id'];
-        if (isset($_COOKIE["jwtToken"])) {
-            $jwtManager = new JWTManager();
-            $username = $jwtManager->getUsername($_COOKIE["jwtToken"]);
+function handleCourseEnrollment($requestData)
+{
+    if (isset($requestData['course_id'])) {
+        try {
+            $courseId = $requestData['course_id'];
+            if (isset($_COOKIE["jwtToken"])) {
+                $jwtManager = new JWTManager();
+                $username = $jwtManager->getUsername($_COOKIE["jwtToken"]);
 
-            $userCollection = MongoDBManager::getCollection('userdb', 'users');
-            $userRepository = new UserRepository($userCollection);
+                $userCollection = MongoDBManager::getCollection('userdb', 'users');
+                $userRepository = new UserRepository($userCollection);
 
-            $result = $userRepository->addEnrollment($username,$courseId);
-            echo json_encode(['response_msg' => $result]);
-            
-        } else {
-            echo json_encode(['login_request' => true]);
+                $enrollmentResult = $userRepository->addEnrollment($username, $courseId);
+                echo json_encode(['response_msg' => $enrollmentResult]);
+            } else {
+                echo json_encode(['login_request' => true]);
+            }
+            exit;
+        } catch (Exception $e) {
+            echo json_encode(['response_msg' => "Failed to enroll: " . $e->getMessage()]);
         }
-        exit;
-    } catch (Exception $e) {
-        echo json_encode(['response_msg' => "Failed to enroll: ".$e->getMessage()]);
     }
 }
+
+handleCourseEnrollment($requestData);

@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\components\public\CourseSection;
-use app\core\database\MongoDBManager;
+use app\utils\CourseUtil;
+use app\core\database\mongo\MongoDBManager;
 use app\core\database\mysql\MySqlManager;
 use app\repositories\UserRepository;
 use app\utils\JWTManager;
@@ -36,8 +36,8 @@ class ApiController extends Controller
 
     public function getCourses()
     {
-        $courseSection = new CourseSection(MySqlManager::getConnection());
-        echo json_encode($courseSection->getCoursesAsHtml($courseSection->getCourses()));
+        $CourseUtil = new CourseUtil(MySqlManager::getConnection());
+        echo json_encode($CourseUtil->getCoursesAsHtml($CourseUtil->getCourses()));
         exit;
     }
 
@@ -74,17 +74,13 @@ class ApiController extends Controller
 
     public function fetchVideo()
     {
-        if (!isset($_GET['video_src'])) {
+        if (!isset($_GET['video_src']) || !isset($_COOKIE["jwtToken"])) {
             return;
         }
 
         $video_src = $_GET['video_src'];
 
         $linkedCourses = MySqlManager::getCourseIDsFromVideoSource(MySqlManager::getConnection(), $video_src);
-
-        if (!isset($_COOKIE["jwtToken"])) {
-            return;
-        }
 
         $jwtToken = $_COOKIE["jwtToken"];
         $jwtManager = new JWTManager();
@@ -108,7 +104,7 @@ class ApiController extends Controller
         exit;
     }
 
-    function bsonArrayToArray($bsonArray)
+    private function bsonArrayToArray($bsonArray)
     {
         $result = [];
         foreach ($bsonArray as $value) {

@@ -1,12 +1,11 @@
 <?php
 
-namespace app\core\database;
+namespace app\core\database\mongo;
 
 use Exception;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
-use RuntimeException;
 
 class MongoDBManager{
     
@@ -14,7 +13,7 @@ class MongoDBManager{
     private static ?Client $client = null;
 
     public static function initializeConfig(): void {
-        $configFilePath = realpath(__DIR__ . '/../../../../config/mongodb.env');
+        $configFilePath = realpath(__DIR__ . '/../../../../../config/mongodb.env');
         self::$uri = parse_ini_file($configFilePath)["MONGODB_URI"];
     }
     public static function setUri(string $uri){

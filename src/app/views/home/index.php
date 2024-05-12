@@ -1,5 +1,5 @@
 <?php 
-  use app\components\public\CourseSection;
+  use app\utils\CourseUtil;
   use app\core\database\mysql\MySqlManager;
   use app\utils\PublicUI;
 ?>
@@ -46,8 +46,8 @@
 
     <section class="course-section">
       <?php 
-        $courseSection = new CourseSection(MySqlManager::getConnection());
-        $courses = $courseSection->getCoursesAsHtml($courseSection->getCourses(limit:8));
+        $CourseUtil = new CourseUtil(MySqlManager::getConnection());
+        $courses = $CourseUtil->getCoursesAsHtml($CourseUtil->getCourses(limit:8));
         foreach ($courses as $course) {
           echo $course;
         }

@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\core\database\mysql\MySqlManager;
-use app\core\database\MongoDBManager;
+use app\core\database\mongo\MongoDBManager;
 use app\utils\LessonUtil;
 use app\utils\JWTManager;
 use app\repositories\UserRepository;
@@ -11,32 +11,39 @@ use app\repositories\UserRepository;
 
 class LessonController extends Controller
 {
-    public function getLesson($courseId)
+    public function getLesson()
     {
-        $courseId = $this->getCourseIdFromUrl($courseId);
+        $courseId = $this->getCourseIdFromUrl();
 
         if (!isset($_COOKIE["jwtToken"])) {
-            header("Location: http://codecademyre.com/login");
-            exit;
+            $this->redirectToLogin();
         }
 
+        // Extract username from JWT token
         $jwtToken = $_COOKIE["jwtToken"];
         $jwtManager = new JWTManager();
         $username = $jwtManager->getUsername($jwtToken);
 
         $userCollection = MongoDBManager::getCollection('userdb', 'users');
         $userRepository = new UserRepository($userCollection);
+
+        // Retrieve user data 
         $user = $userRepository->getUserByUsername($username);
+
+        // Extract enrolled course IDs from user data
         $userEnrolledCourses = isset($user['enrollment_keys']) ? $this->bsonArrayToArray($user['enrollment_keys']) : [];
 
+        // Check if the user is not enrolled in the course
         if (!in_array($courseId, $userEnrolledCourses)) {
-            header("Location: http://codecademyre.com/login");
+            // Forbidden access
+            $this->renderError('403');
             exit;
         }
 
-        // Render lesson page
+        // If it is enrolled render lesson page
         $lessonUtil = new LessonUtil(MySqlManager::getConnection());
         $videoLessonURI = $lessonUtil->getVideoURIByCourseId($courseId);
+        // Render the lesson page with the video lesson URI
         echo $lessonUtil->renderLessonPage($videoLessonURI);
     }
 
@@ -50,7 +57,7 @@ class LessonController extends Controller
     }
 
 
-    private function getCourseIdFromUrl($courseId)
+    private function getCourseIdFromUrl()
     {
         $url = $_SERVER['REQUEST_URI'];
         $pattern = "/\/course\/(\d+)\//";

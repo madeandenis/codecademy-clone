@@ -1,11 +1,11 @@
-<div class="sidebar" onmouseleave="closeDbTree()">
+<div class="sidebar" onmouseleave="closeNavigationTree()">
     <div class="sidebar-header">
         <a style="text-decoration:none;" href="http://codecademyre.com/admin"><p class="logo">DenDev_<br>Manager</p></a>
     </div>
     <div class="sidebar-routes">
         <ul>
-            <li><a onclick="toggleDbTree()"><i class="fa-solid fa-sitemap"></i><span>Database</span></a></li>
-            <?php include 'databaseTree.php' ?>            
+            <li><a onclick="toggleNavigationTree()"><i class="fa-solid fa-sitemap"></i><span>Database</span></a></li>
+            <?php include 'navigationTree.php' ?>            
             <li><a href="http://codecademyre.com/admin/crud"><i class="fa-solid fa-bars-progress"></i><span>CRUD</span></a></li>
             <li><a href="http://codecademyre.com/admin/search"><i class="fas fa-search"></i><span>Search</span></a></li>
             <li><a href="http://codecademyre.com/admin/query"><i class="fas fa-exchange-alt"></i></i><span>Query</span></a></li>

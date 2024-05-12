@@ -2,7 +2,7 @@
 
 namespace app\core\routing;
 
-use app\controllers\ErrorsController;
+use app\controllers\PageErrorController;
 use app\services\providers\PathService;
 
 use Exception;
@@ -20,16 +20,21 @@ class Dispatcher
 
     public function dispatch($uri, $method)
     {
-        $uri = strtok($uri, '?');
+        // Removes basePath which consists of scheme and host
         $uri = str_replace($this->basePath, '', $uri);
+        // Removes the query string
+        $uri = strtok($uri, '?');
 
         if (!isset($this->routes[$method])) {
             http_response_code(500);
             throw new Exception("No routes defined for method: $method");
         }
 
+        // Checks if there is a route defined for the uri
         if (array_key_exists($uri, $this->routes[$method])) {
+            // Retrieves route information associated with the uri
             $route = $this->routes[$method][$uri];
+            // Extracts controller class and method name and dynamically action it 
             $controller = $route['controller'];
             $action = $route['action'];
             $controller = new $controller();
@@ -37,7 +42,9 @@ class Dispatcher
             return;
         }
 
+        // Iterates over each route defined for the specified HTTP method 
         foreach ($this->routes[$method] as $route => $handler) {
+            // Checks if the requested URI matches the current route pattern
             if (preg_match('#^' . $route . '$#', $uri, $matches)) {
                 $controller = $handler['controller'];
                 $action = $handler['action'];
@@ -47,9 +54,10 @@ class Dispatcher
             }
         }
 
+        // If there is no route found, display 404 error view page
         http_response_code(404);
-        $errorsController = new ErrorsController();
-        $errorsController->error_404();
+        $errorsController = new PageErrorController();
+        $errorsController->error('404');
     }
 
 }
