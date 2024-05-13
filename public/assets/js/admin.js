@@ -866,7 +866,7 @@ function logoutUser() {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            window.location.href = 'http://codecademyre.com/login';
+            window.location.href = 'https://codecademyre.com/login';
         })
         .catch(error => {
             console.error('Fetch Error:', error);

@@ -85,6 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-header("Location: http://codecademyre.com/upload");
+header("Location: https://codecademyre.com/upload");
 
 exit;

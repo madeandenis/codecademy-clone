@@ -14,7 +14,7 @@
     <title>Register</title>
 </head>
 <body>
-  <a class="header-logo" href="http://codecademyre.com">
+  <a class="header-logo" href="https://codecademyre.com">
     <img src="assets/logo/logoBlue.png" alt="Logo" class="logo">
   </a>
   <?php
@@ -67,7 +67,7 @@
         </div>
         <div class="auth-section">
           <p>Already have an account?</p>
-          <a href="http://codecademyre.com/login">Log in</a>
+          <a href="https://codecademyre.com/login">Log in</a>
         </div>
     </form>
   </div>   

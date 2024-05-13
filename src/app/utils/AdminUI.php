@@ -13,7 +13,7 @@ class AdminUI
             
             if ($tokenManager->hasAdminRole($token)) {
                 echo '
-                <a href="http://codecademyre.com/admin" class="admin-panel-link">
+                <a href="https://codecademyre.com/admin" class="admin-panel-link">
                     <i class="fas fa-tools"></i>
                     <span>Admin Panel</span>
                 </a>';

@@ -24,9 +24,9 @@ class FlashMessage
 
             if (isset($this->page)) {
                 if ($this->page === 'register' || $this->page === 'signup') {
-                    header("refresh:1;url=http://codecademyre.com/login");
+                    header("refresh:1;url=https://codecademyre.com/login");
                 } else if ($this->page === 'login') {
-                    header("refresh:1;url=http://codecademyre.com/home");
+                    header("refresh:1;url=https://codecademyre.com/home");
                 }
             }
         }

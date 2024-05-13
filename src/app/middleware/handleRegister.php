@@ -40,6 +40,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username']) && isset($
     }
 }
 
-header("Location: http://codecademyre.com/register");
+header("Location: https://codecademyre.com/register");
 
 exit; 

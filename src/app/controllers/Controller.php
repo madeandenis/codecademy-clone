@@ -63,7 +63,7 @@ class Controller
     }
     protected function redirectToLogin()
     {
-        header("Location: http://codecademyre.com/login");
+        header("Location: https://codecademyre.com/login");
         exit;
     }
 
@@ -83,9 +83,6 @@ class Controller
     }
     protected function handleEnrollment()
     {
-        if (!isset($_COOKIE["jwtToken"])) {
-            $this->redirectToLogin();
-        }
         require $this->middlewarePath . "/handleEnrollment.php";
     }
     protected function handleUpload()

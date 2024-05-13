@@ -55,7 +55,7 @@
     </section>
 
     <div class="course-heading-title">  
-        <a href="http://codecademyre.com/catalog">
+        <a href="https://codecademyre.com/catalog">
           <button class="link-button">Explore Full Catalog</button>
         </a>
     </div>
@@ -77,7 +77,7 @@
           <h1>Not sure where to start?</h1>
         <br>
         <p>This short quiz will sort you out. Answer a few simple questions to get personal career advice and course recommendations.</p>
-        <a href="http://codecademyre.com/quiz"><button class="link-button">Take the quiz</button></a>
+        <a href="https://codecademyre.com/quiz"><button class="link-button">Take the quiz</button></a>
         </div>
       </div>
       <div class="right-side-quiz">

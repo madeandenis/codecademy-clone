@@ -11,28 +11,32 @@ Session::start();
 $requestBody = file_get_contents('php://input');
 $requestData = json_decode($requestBody, true);
 
-function handleCourseEnrollment($requestData)
-{
-    if (isset($requestData['course_id'])) {
-        try {
-            $courseId = $requestData['course_id'];
-            if (isset($_COOKIE["jwtToken"])) {
-                $jwtManager = new JWTManager();
-                $username = $jwtManager->getUsername($_COOKIE["jwtToken"]);
+function handleCourseEnrollment($requestData) {
+    if (!isset($requestData['course_id'])) {
+        echo json_encode(['error' => 'Course ID is missing']);
+        return;
+    }
 
-                $userCollection = MongoDBManager::getCollection('userdb', 'users');
-                $userRepository = new UserRepository($userCollection);
-
-                $enrollmentResult = $userRepository->addEnrollment($username, $courseId);
-                echo json_encode(['response_msg' => $enrollmentResult]);
-            } else {
-                echo json_encode(['login_request' => true]);
-            }
-            exit;
-        } catch (Exception $e) {
-            echo json_encode(['response_msg' => "Failed to enroll: " . $e->getMessage()]);
+    try {
+        $courseId = $requestData['course_id'];
+        
+        if (!isset($_COOKIE["jwtToken"])) {
+            echo json_encode(['error' => 'Authentication required']);
+            return;
         }
+
+        $jwtManager = new JWTManager();
+        $username = $jwtManager->getUsername($_COOKIE["jwtToken"]);
+
+        $userCollection = MongoDBManager::getCollection('userdb', 'users');
+        $userRepository = new UserRepository($userCollection);
+
+        $enrollmentResult = $userRepository->addEnrollment($username, $courseId);
+        echo json_encode(['response_msg' => $enrollmentResult]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Failed to enroll: ' . $e->getMessage()]);
     }
 }
+
 
 handleCourseEnrollment($requestData);

@@ -26,8 +26,8 @@ class JWTManager{
 
     public function createToken(User $user){
         $payload = [
-            'iss' => 'http://codecademyre.com',
-            'aud' => 'http://codecademyre.com',
+            'iss' => 'https://codecademyre.com',
+            'aud' => 'https://codecademyre.com',
             'iat' => time(),
             'exp' => time() + $this->expDuration,
             'context' => [
