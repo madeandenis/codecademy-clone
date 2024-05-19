@@ -3,6 +3,7 @@
 use app\core\database\mysql\MySqlManager;
 use app\utils\JWTManager;
 use app\utils\Session;
+use src\app\utils\FileUtils;
 
 Session::start();
 
@@ -11,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if file was uploaded without errors
     if (isset($_FILES["courseFile"]) && $_FILES["courseFile"]["error"] == 0) {
         $targetDir = realpath(__DIR__ . '/../uploads/') . '/'; 
-        $targetFile = $targetDir . basename($_FILES["courseFile"]["name"]);
+        $targetFile = FileUtils::sanitizeFileName($targetDir . basename($_FILES["courseFile"]["name"]));
 
         // Check file type to ensure it's a video file
         $allowedExtensions = array("mp4");

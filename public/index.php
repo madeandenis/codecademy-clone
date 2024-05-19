@@ -11,4 +11,3 @@ use app\core\routing\Router;
 
 $router = Router::getRouter();
 $router->dispatch();
-

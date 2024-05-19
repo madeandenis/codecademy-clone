@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username_or_email']) 
 
             // Validates and sets token in a HTTP only cookie
             if ($jwtManager->validateToken($token)) {
-                setcookie(name: "jwtToken", value: $token, expires_or_options: time() + $jwtManager->getExpDuration(), httponly: true);
+                setcookie(name: "jwtToken", value: $token, expires_or_options: time() + $jwtManager->getExpDuration(), httponly: true, secure: true);
                 $_SESSION['success_msg'] = 'Authentication successful';
             }
         }

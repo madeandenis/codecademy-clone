@@ -141,15 +141,23 @@ use app\utils\PublicUI;
                             return response.json();
                         })
                         .then(data => {
-                            if (data.login_request === true) {
+                            if (data.error === 'Authentication required') {
                                 window.location.href = "https://codecademyre.com/login";
+                            } else if (data.error) {
+                                const enrollBtn = document.querySelector('.enroll-button');
+                                enrollBtn.textContent = data.error;
+                                enrollBtn.style.backgroundColor = '#010813';
+                                enrollBtn.disabled = true;
+                                setTimeout(() => {
+                                    location.reload(true);
+                                }, 1000);
                             } else {
                                 const enrollBtn = document.querySelector('.enroll-button');
                                 enrollBtn.textContent = data.response_msg;
                                 enrollBtn.style.backgroundColor = '#010813';
                                 enrollBtn.disabled = true;
                                 setTimeout(() => {
-                                    window.location.href = currentURL + '/lesson/1';;
+                                    window.location.href = window.location.href + '/lesson/1';
                                 }, 1000);
                             }
                         })
