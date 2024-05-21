@@ -1,0 +1,24 @@
+body {
+    display: flex;
+    justify-content: center;    
+    --dot-bg: #010813;
+    --dot-color: whitesmoke;
+    --dot-size: 0.6px;
+    --dot-space: 25px;
+    background:
+        linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+        var(--dot-color);
+}
+
+.course-container {
+    display: inline-block;
+    justify-content: center;
+    font-family: Apercu, sans-serif;
+    background-color: #FDF0E5;
+    color: #10162F;
+    margin: 5vh auto;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 5px;
+}

@@ -5,8 +5,6 @@ namespace app\core\routing;
 use app\controllers\PageErrorController;
 use app\services\providers\PathService;
 
-use Exception;
-
 class Dispatcher
 {
     private $routes;

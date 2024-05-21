@@ -1,0 +1,43 @@
+.message-container {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 350px;
+    padding: 15px;
+    justify-content: center;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid black;
+}
+
+#loginBody .message-container {
+    transform: translate(-50%, 150%);
+}
+
+.error_msg,
+.success_msg {
+    font-size: 14px;
+    font-weight: 550;
+    font-family: 'Apercu', sans-serif;
+    list-style-type: none;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+}
+
+.error_msg span {
+    position: absolute;
+    font-size: 20px;
+    color: #df6d6d;
+    transform: translate(-120%, -7%);
+    padding-right: 5px;
+}
+
+.success_msg span {
+    position: absolute;
+    font-size: 16px;
+    color: #539220;
+    transform: translate(-120%, -7%);
+    padding-right: 5px;
+}

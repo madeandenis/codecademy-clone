@@ -94,11 +94,9 @@ $CourseUtil = new CourseUtil(MySqlManager::getConnection());
 
       <!-- Displayed Courses Container -->
       <div class="courses-container">
-        
+
       </div>
     </div>
-
-
 
     <footer>
       <?php
