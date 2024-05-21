@@ -2,8 +2,6 @@
 
 namespace app\utils;
 
-use app\models\Course;
-use app\services\providers\PathService;
 use PDO;
 use PDOException;
 

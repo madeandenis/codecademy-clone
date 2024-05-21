@@ -13,25 +13,25 @@ class LessonController extends Controller
 {
     public function getLesson()
     {
-        $courseId = $this->getCourseIdFromUrl();
-
         if (!isset($_COOKIE["jwtToken"])) {
             $this->redirectToLogin();
         }
-
+        
         // Extract username from JWT token
         $jwtToken = $_COOKIE["jwtToken"];
         $jwtManager = new JWTManager();
         $username = $jwtManager->getUsername($jwtToken);
-
+        
         $userCollection = MongoDBManager::getCollection('userdb', 'users');
         $userRepository = new UserRepository($userCollection);
-
+        
         // Retrieve user data 
         $user = $userRepository->getUserByUsername($username);
-
+        
         // Extract enrolled course IDs from user data
         $userEnrolledCourses = isset($user['enrollment_keys']) ? $this->bsonArrayToArray($user['enrollment_keys']) : [];
+
+        $courseId = $this->getCourseIdFromUrl();
 
         // Check if the user is not enrolled in the course
         if (!in_array($courseId, $userEnrolledCourses)) {
@@ -63,6 +63,7 @@ class LessonController extends Controller
         $pattern = "/\/course\/(\d+)\//";
 
         if (preg_match($pattern, $url, $matches)) {
+            // First captured group is the course ID
             return $matches[1];
         } else {
             echo "Course ID not found.";

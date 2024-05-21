@@ -38,10 +38,10 @@ class JWTManager{
         ];
         return JWT::encode($payload, $this->secretKey, 'HS256');
     }
-    public function decodeToken($token){
+    public function decodeToken(string $token){
         return JWT::decode($token, new Key($this->secretKey, 'HS256'));
     }
-    public function validateToken($token){
+    public function validateToken(string $token){
         try{
             return $this->decodeToken($token);
         } catch (ExpiredException $e) {
@@ -57,7 +57,7 @@ class JWTManager{
     public function getExpDuration(){
         return $this->expDuration;
     }
-    public function getUsername($token){
+    public function getUsername(string $token){
         try{
             $decodedToken = $this->validateToken($token);
             if(isset($decodedToken->context->username)){
@@ -68,7 +68,7 @@ class JWTManager{
         }
         return null;
     }
-    public function getUserRoles($token){
+    public function getUserRoles(string $token){
         try{
             $decodedToken = $this->validateToken($token);
             if(isset($decodedToken->context->roles)){
@@ -79,7 +79,7 @@ class JWTManager{
         }
         return null;
     }
-    public function hasAdminRole($token){
+    public function hasAdminRole(string $token){
         try{
             $roles = $this->getUserRoles($token);
             if($roles){

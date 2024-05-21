@@ -18,6 +18,12 @@ class Controller
         $this->apiPath = realpath(__DIR__ . '/../api');
     }
 
+    protected function redirectToLogin()
+    {
+        header("Location: https://codecademyre.com/login");
+        exit;
+    }
+
     protected function renderHome($view)
     {
         require $this->viewsPath . "/home/$view.php";
@@ -41,30 +47,24 @@ class Controller
     {
         require $this->viewsPath . "/auth/$view.php";
     }
-    protected function renderError($view)
+    protected function renderError($statusCode)
     {
-        require $this->viewsPath . "/errors/$view.php";
+        require $this->viewsPath . "/errors/$statusCode.php";
     }
 
     protected function renderAdmin($view)
     {
         $jwtManager = new JWTManager();
 
-        if (isset($_COOKIE["jwtToken"])) {
-            if ($jwtManager->hasAdminRole($_COOKIE["jwtToken"])) {
-                require $this->viewsPath . "/admin/$view.php";
-            } else {
-                // Forbidden access
-                $this->renderError('403');
-            }
-        } else {
+        if (!isset($_COOKIE["jwtToken"])) {
             $this->redirectToLogin();
         }
-    }
-    protected function redirectToLogin()
-    {
-        header("Location: https://codecademyre.com/login");
-        exit;
+
+        if (!$jwtManager->hasAdminRole($_COOKIE["jwtToken"])) {
+            $this->renderError('403');
+        }
+
+        require $this->viewsPath . "/admin/$view.php";
     }
 
     protected function handleLogin()

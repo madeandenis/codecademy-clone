@@ -25,9 +25,10 @@ class Dispatcher
         // Removes the query string
         $uri = strtok($uri, '?');
 
+        // If the method is not defined, return a 500 error
         if (!isset($this->routes[$method])) {
             http_response_code(500);
-            throw new Exception("No routes defined for method: $method");
+            exit;
         }
 
         // Checks if there is a route defined for the uri

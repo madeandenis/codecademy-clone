@@ -3,89 +3,153 @@
 use app\core\database\mysql\MySqlManager;
 use app\utils\JWTManager;
 use app\utils\Session;
-use src\app\utils\FileUtils;
+use app\utils\FileUtils;
+use app\exceptions\FileUploadException;
 
 Session::start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Check and modify the php.ini
 
-    // Check if file was uploaded without errors
-    if (isset($_FILES["courseFile"]) && $_FILES["courseFile"]["error"] == 0) {
-        $targetDir = realpath(__DIR__ . '/../uploads/') . '/'; 
-        $targetFile = FileUtils::sanitizeFileName($targetDir . basename($_FILES["courseFile"]["name"]));
+// $phpIniFile = php_ini_loaded_file();
+// $uploadMaxFilesize = ini_get('upload_max_filesize');
+// $postMaxSize = ini_get('post_max_size');
+// $maxInputTime = ini_get('max_input_time');
+// $maxExecutionTime = ini_get('max_execution_time');
 
-        // Check file type to ensure it's a video file
-        $allowedExtensions = array("mp4");
-        $fileExtension = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-        if (!in_array($fileExtension, $allowedExtensions)) {
-            $_SESSION['error_msg'] = "Only MP4 file types are allowed, ";
-            exit;
-        }
+// echo "Loaded php.ini file: " . $phpIniFile . "<br>";
+// echo "upload_max_filesize: " . $uploadMaxFilesize . "<br>";
+// echo "post_max_size: " . $postMaxSize . "<br>";
+// echo "max_input_time: " . $maxInputTime . "<br>";
+// echo "max_execution_time: " . $maxExecutionTime . "<br>";
+// exit;
 
-        // Move the uploaded file to the desired directory
-        if (move_uploaded_file($_FILES["courseFile"]["tmp_name"], $targetFile)) {
-            // Extract form data
-            $title = $_POST["courseName"];
-            $description = $_POST["courseDescription"];
-            $difficulty = $_POST["difficulty"];
-            $lessonCount = isset($_POST["lessonCount"]) && is_numeric($_POST["lessonCount"]) ? intval($_POST["lessonCount"]) : 0;
-            $price = isset($_POST["price"]) && is_numeric($_POST["price"]) ? number_format(floatval(str_replace(',', '', $_POST["price"])), 2, '.', '') : '0.00';
-            $courseType = isset($_POST["isPaid"]) ? "Paid" : "Free";
+// Restart php-fpm service after modified values
 
-            $jwtManager = new JWTManager();
-            $token = $token = $_COOKIE['jwtToken'];
-            $username = $jwtManager->getUsername($token);
+if (!isset($_FILES["courseFile"])) {
+    $_SESSION['error_msg'] = "No video file was uploaded or an error occurred.";
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
 
-            $uploadedBy = $username;
+// Check for upload errors 
+if ($_FILES["courseFile"]["error"] != 0) {
+    $errorMessage = '';
+    switch ($_FILES["courseFile"]["error"]) {
+        case UPLOAD_ERR_INI_SIZE:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_INI_SIZE . "<br>";
+            break;
+        case UPLOAD_ERR_FORM_SIZE:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_FORM_SIZE . "<br>";
+            break;
+        case UPLOAD_ERR_PARTIAL:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_PARTIAL . "<br>";
+            break;
+        case UPLOAD_ERR_NO_FILE:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_NO_FILE . "<br>";
+            break;
+        case UPLOAD_ERR_NO_TMP_DIR:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_NO_TMP_DIR . "<br>";
+            break;
+        case UPLOAD_ERR_CANT_WRITE:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_CANT_WRITE . "<br>";
+            break;
+        case UPLOAD_ERR_EXTENSION:
+            $errorMessage .= FileUploadException::UPLOAD_ERR_EXTENSION . "<br>";
+            break;
+        default:
+            $errorMessage .= "Unknown upload error.<br>";
+            break;
+    }
+    $_SESSION['error_msg'] = $errorMessage;
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
 
-            // Insert course data into db
-            $result = MySqlManager::insertCourse(MySqlManager::getConnection(), $title, $description, $difficulty, $lessonCount, $price, $courseType, $_FILES["courseFile"]["name"], $uploadedBy);
+// Define the uploaded file and its type
+$uploadedFile = $_FILES["courseFile"];
+$uploadedFileType = strtolower($uploadedFile["type"]);
 
-            // Check is there was an error in the db insertion
-            if (isset($result['Success'])) {
-                $_SESSION['success_msg'] = 'Your course was uploaded successfully';
-            } elseif (isset($result['Error'])) {
-                $_SESSION['error_msg'] = 'There was an error during the upload.' . $result['Error'];
-                if (file_exists($targetFile)) {
-                    unlink($targetFile);
-                }
-            }
-        } else {
-            $lastError = error_get_last();
-            $_SESSION['error_msg'] = "Error moving uploaded file: " . $lastError['message'];
-        }
-    } else {
-        $errorMessage = '';
-        switch ($_FILES["courseFile"]["error"]) {
-            case UPLOAD_ERR_INI_SIZE:
-                $errorMessage .= "The uploaded file exceeds the upload_max_filesize<br>";
-                break;
-            case UPLOAD_ERR_FORM_SIZE:
-                $errorMessage .= "The uploaded file exceeds the MAX_FILE_SIZE directive specified in the form.<br>";
-                break;
-            case UPLOAD_ERR_PARTIAL:
-                $errorMessage .= "The uploaded file was only partially uploaded.<br>";
-                break;
-            case UPLOAD_ERR_NO_FILE:
-                $errorMessage .= "No file was uploaded.<br>";
-                break;
-            case UPLOAD_ERR_NO_TMP_DIR:
-                $errorMessage .= "Missing a temporary folder.<br>";
-                break;
-            case UPLOAD_ERR_CANT_WRITE:
-                $errorMessage .= "Failed to write file to disk.<br>";
-                break;
-            case UPLOAD_ERR_EXTENSION:
-                $errorMessage .= "A PHP extension stopped the file upload.<br>";
-                break;
-            default:
-                $errorMessage .= "Unknown upload error.<br>";
-                break;
-        }
-        $_SESSION['error_msg'] = "No video file was uploaded or an error occurred.<br>" . $errorMessage;
+// Define the allowed file types
+$allowedTypes = array("video/mp4","video/mpeg");
+
+// Check if the uploaded file type is in the allowed types
+if (!in_array($uploadedFileType, $allowedTypes)) {
+    $allowedTypesString = implode(", ", $allowedTypes);
+    $_SESSION['error_msg'] = $uploadedFileType . " is not allowed.<br>" . "Only the following file types are allowed: $allowedTypesString";
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
+
+// Sanitize the uploaded file name
+$uploadedFileName = FileUtils::sanitizeFileName($uploadedFile["name"]);
+
+// Define the target directory and file location
+$targetDirLocation = realpath(__DIR__ . '/../uploads/') . '/'; 
+$targetFileLocation = $targetDirLocation . $uploadedFileName;
+
+// Move file from temporary location to target location
+if (!(move_uploaded_file($_FILES["courseFile"]["tmp_name"], $targetFileLocation))) {
+    $lastError = error_get_last();
+    $_SESSION['error_msg'] = "Error moving uploaded file: " . $lastError['message'];
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
+
+// Extract form data
+$title = getFormData('courseName', 'string', '');
+$description = getFormData('courseDescription', 'string', '');
+$difficulty = getFormData('difficulty', 'string', '');
+$lessonCount = getFormData('lessonCount', 'int', 0);
+$price = getFormData('price', 'float', 0.00);
+$courseType = getFormData('isPaid', 'bool', false) ? 'Paid' : 'Free';
+
+// Extract username
+$jwtManager = new JWTManager();
+$token = $_COOKIE['jwtToken'];
+$username = $jwtManager->getUsername($token);
+
+$result = MySqlManager::insertCourse(MySqlManager::getConnection(), $title, $description, $difficulty, $lessonCount, $price, $courseType, $uploadedFileName, $username);
+
+if (isset($result['Success'])) {
+    $_SESSION['success_msg'] = 'Your course was uploaded successfully';
+    header("Location: https://codecademyre.com/upload");
+    exit;
+} 
+elseif (isset($result['Error'])) {
+    $_SESSION['error_msg'] = 'There was an error during the upload.' . $result['Error'];
+    if (file_exists($targetFile)) {
+        unlink($targetFile);
+    }
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
+else{
+    'There was an error during the upload.';
+    header("Location: https://codecademyre.com/upload");
+    exit;
+}
+
+
+
+// Helper methods
+function getFormData($key, $type, $default = null) {
+    if (!isset($_POST[$key])) {
+        return $default;
+    }
+
+    $value = $_POST[$key];
+
+    switch ($type) {
+        case 'int':
+            return is_numeric($value) ? intval($value) : $default;
+        case 'float':
+            $value = str_replace(',', '', $value);
+            return is_numeric($value) ? floatval($value) : $default;
+        case 'bool':
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        default:
+            return htmlspecialchars(trim($value));
     }
 }
 
-header("Location: https://codecademyre.com/upload");
-
-exit;
+     

@@ -1,6 +1,6 @@
 <?php
 
-namespace src\app\utils;
+namespace app\utils;
 
 class FileUtils {
 

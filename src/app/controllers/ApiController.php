@@ -11,10 +11,25 @@ use app\utils\StreamVideo;
 
 class ApiController extends Controller
 {
-
+    private function verifyAdminPrivileges()
+    {
+        $jwtToken = $_COOKIE["jwtToken"] ?? null;
+        $jwtManager = new JwtManager();
+        if (!$jwtToken || !$jwtManager->validateToken($jwtToken)) {
+            header("Location: https://codecademyre.com/login");
+            exit;
+        }
+        if (!$jwtManager->hasAdminRole($jwtToken)) {
+            $pageErrorController = new PageErrorController();
+            $pageErrorController->error('403');
+            exit;
+        }
+    }
     // GET Methods
     public function getTables()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['schema'])) {
             $schema_name = $_GET['schema'];
             echo json_encode(MySqlManager::getTables($schema_name, MySqlManager::getConnection()));
@@ -23,6 +38,8 @@ class ApiController extends Controller
     }
     public function getTableData()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['schema']) && isset($_GET['table'])) {
             $schema_name = $_GET['schema'];
             $table_name = $_GET['table'];
@@ -37,12 +54,22 @@ class ApiController extends Controller
     public function getCourses()
     {
         $CourseUtil = new CourseUtil(MySqlManager::getConnection());
+        if (isset($_GET['count'])) {
+            if($_GET['count'] === 'all') {
+                echo json_encode($CourseUtil->getCoursesAsHtml($CourseUtil->getCourses()));
+            }
+            else if(is_numeric($_GET['count'])) {
+                echo json_encode($CourseUtil->getCoursesAsHtml($CourseUtil->getCourses(limit: $_GET['count'])));
+            }
+            exit;
+        }
         echo json_encode($CourseUtil->getCoursesAsHtml($CourseUtil->getCourses()));
-        exit;
     }
 
     public function search()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['searchQuery'])) {
             $searchQuery = $_GET['searchQuery'];
             echo json_encode(MySqlManager::searchData($searchQuery));
@@ -53,6 +80,8 @@ class ApiController extends Controller
 
     public function fetchProcedures()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['schema'])) {
             $schema_name = $_GET['schema'];
             echo json_encode(MySqlManager::getProcedures(MySqlManager::getConnection(), $schema_name));
@@ -63,6 +92,8 @@ class ApiController extends Controller
 
     public function fetchFunctions()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['schema'])) {
             $schema_name = $_GET['schema'];
             echo json_encode(MySqlManager::getFunctions(MySqlManager::getConnection(), $schema_name));
@@ -116,6 +147,8 @@ class ApiController extends Controller
 
     public function query()
     {
+        $this->verifyAdminPrivileges();
+
         if (isset($_GET['query'])) {
             $query = $_GET['query'];
             echo json_encode(MySqlManager::executeQuery($query, MySqlManager::getConnection()));
@@ -153,6 +186,8 @@ class ApiController extends Controller
     }
     public function insertDatabase()
     {
+        $this->verifyAdminPrivileges();
+
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $column_names = $this->getColumnNames();
@@ -162,6 +197,8 @@ class ApiController extends Controller
     }
     public function updateDatabase()
     {
+        $this->verifyAdminPrivileges();
+
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $column_names = $this->getColumnNames();
@@ -171,6 +208,8 @@ class ApiController extends Controller
     }
     public function deleteFromDatabase()
     {
+        $this->verifyAdminPrivileges();
+
         $schema_name = $this->getSchemaName();
         $table_name = $this->getTableName();
         $params = $this->getBodyParams();

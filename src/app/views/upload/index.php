@@ -188,6 +188,8 @@ Session::start();
         <?php
         $flashMessage = new FlashMessage();
         $flashMessage->setPageType('upload');
+        
+        // Display Response instead of 2 methods
         $flashMessage->displayErrorMessage();
         $flashMessage->displaySuccessMessage();
         ?>
