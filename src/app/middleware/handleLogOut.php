@@ -15,7 +15,9 @@ if (isset($_COOKIE['jwtToken'])) {
     // Start a new session
     Session::start();
 
-    $_SESSION['success_logout'] = 'You have been successfully logged out.';
+    $_SESSION['success_msg'] = 'You have been successfully logged out.';
+
+    Session::end();
 } else {
     $_SESSION['error_msg'] = 'You are not currently logged in.';
 }

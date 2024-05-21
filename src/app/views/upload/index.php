@@ -1,6 +1,7 @@
 <?php
 use app\utils\FlashMessage;
 use app\utils\Session;
+
 Session::start();
 ?>
 
@@ -137,8 +138,8 @@ Session::start();
                 cursor: pointer;
             }
 
-            .error-container,
-            .success-container {
+            /* Dynamic Components */
+            .message-container {
                 position: relative;
                 display: inline-block;
                 left: 50%;
@@ -151,12 +152,12 @@ Session::start();
                 border: 1px solid black;
             }
 
-            #loginBody .error-container {
+            #loginBody .message-container {
                 transform: translate(-50%, 150%);
             }
 
-            .error,
-            .success {
+            .error_msg,
+            .success_msg {
                 font-size: 14px;
                 font-weight: 550;
                 font-family: 'Apercu', sans-serif;
@@ -166,7 +167,7 @@ Session::start();
                 padding-left: 15px;
             }
 
-            .error span {
+            .error_msg span {
                 position: absolute;
                 font-size: 20px;
                 color: #df6d6d;
@@ -174,7 +175,7 @@ Session::start();
                 padding-right: 5px;
             }
 
-            .success span {
+            .success_msg span {
                 position: absolute;
                 font-size: 16px;
                 color: #539220;
@@ -187,11 +188,7 @@ Session::start();
     <body>
         <?php
         $flashMessage = new FlashMessage();
-        $flashMessage->setPageType('upload');
-        
-        // Display Response instead of 2 methods
-        $flashMessage->displayErrorMessage();
-        $flashMessage->displaySuccessMessage();
+        $flashMessage->displayFlashMessage();
         ?>
         <div class="course-upload-container">
             <h2>Upload Your Course</h2>
@@ -250,6 +247,7 @@ Session::start();
                 }
             });
         </script>
+        <script src="assets/js/flashMessage.js"></script>
     </body>
 
 </html>

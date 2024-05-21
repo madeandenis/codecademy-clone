@@ -1700,8 +1700,7 @@ Pricing-Page
 }
 
 /* Dynamic Components */
-.error-container,
-.success-container{
+.message-container{
   position: relative;
   display: inline-block;
   left: 50%;
@@ -1713,12 +1712,12 @@ Pricing-Page
   background-color: white;
   border: 1px solid black;
 }
-#loginBody .error-container{
+#loginBody .message-container{
   transform: translate(-50%, 150%);
 }
 
-.error,
-.success{
+.error_msg,
+.success_msg{
   font-size: 14px;
   font-weight: 550;
   font-family: 'Apercu', sans-serif;
@@ -1727,14 +1726,14 @@ Pricing-Page
   padding-bottom: 5px;
   padding-left: 15px;
 }
-.error span{
+.error_msg span{
   position: absolute;
   font-size: 20px;
   color: #df6d6d;
   transform: translate(-120%, -7%);
   padding-right: 5px;
 }
-.success span{
+.success_msg span{
   position: absolute;
   font-size: 16px;
   color: #539220;

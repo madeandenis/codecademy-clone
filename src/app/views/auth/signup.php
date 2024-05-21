@@ -19,10 +19,8 @@
   </a>
   <?php
     $flashMessage = new FlashMessage();
-    $flashMessage->setPageType('signup');
-    $flashMessage->displayErrorMessage();
-    $flashMessage->displaySuccessMessage();
-
+    $flashMessage->setPageRedirect("https://codecademyre.com/login");
+    $flashMessage->displayFlashMessage();
     Session::end();
   ?>
   <div class="auth-form">
@@ -73,5 +71,6 @@
   </div>   
   
   <script src="assets/js/auth.js"></script>
+  <script src="assets/js/flashMessage.js"></script>
 </body>
 </html>

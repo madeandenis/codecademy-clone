@@ -6,47 +6,49 @@ use app\utils\Session;
 
 class FlashMessage
 {
-    private string $page;
-    public function setPageType($page)
+    private string $pageRedirect = '';
+    private int $refreshDelay = 1;
+    public function setPageRedirect($pageRedirect, $refreshDelay = 1)
     {
-        $this->page = $page;
+        $this->pageRedirect = $pageRedirect;
+        $this->refreshDelay = $refreshDelay;
     }
-    public function displaySuccessMessage()
-    {
-        // Resumes session
+
+    public function displayFlashMessage(){
         Session::start();
-
-        if (isset($_SESSION['success_msg'])) {
-            echo '<div class="success-container">';
-            echo '<li class="success">' . '<span>&#10004;</span>' . $_SESSION['success_msg'] . '</li>';
-            echo '</div>';
-            unset($_SESSION['success_msg']);
-
-            if (isset($this->page)) {
-                if ($this->page === 'register' || $this->page === 'signup') {
-                    header("refresh:1;url=https://codecademyre.com/login");
-                } else if ($this->page === 'login') {
-                    header("refresh:1;url=https://codecademyre.com/home");
-                }
-            }
-        }
-        // Logout message
-        if (isset($_SESSION['success_logout'])) {
-            echo '<div class="success-container">';
-            echo '<li class="success">' . '<span>&#10004;</span>' . $_SESSION['success_logout'] . '</li>';
-            echo '</div>';
-            unset($_SESSION['success_logout']);
-        }
+        $this->displaySuccessMessage();
+        $this->displayErrorMessage();
     }
-    public function displayErrorMessage()
+    private function displaySuccessMessage()
     {
-        Session::start();
+        $checkMarkIcon = '&#10004;';
+        if (!isset($_SESSION['success_msg'])) {
+            return;
+        }
+        $this->displayMessage('success_msg', $checkMarkIcon, $_SESSION['success_msg']);
         
-        if (isset($_SESSION['error_msg'])) {
-            echo '<div class="error-container">';
-            echo '<li class="error">' . '<span>&times;</span>' . $_SESSION['error_msg'] . '</li>';
-            echo '</div>';
-            unset($_SESSION['error_msg']);
+        if ($this->pageRedirect) {
+            header("refresh:{$this->refreshDelay};url={$this->pageRedirect}");
+            exit;
         }
+    }
+    private function displayErrorMessage()
+    {
+        $xMarkIcon = '&times;';
+        if (!isset($_SESSION['error_msg'])) {
+            return;
+        }
+        $this->displayMessage('error_msg', $xMarkIcon, $_SESSION['error_msg']);
+    }
+
+    private function displayMessage($messageType, $icon, $message)
+    {
+        $messageContainerBody = "<div class=\"message-container\">";
+        $messageContainerBody .= "<li class=\"{$messageType}\"> <span> {$icon}</span> {$message}</li>";
+        $messageContainerBody .= "</div>";
+
+        echo $messageContainerBody;
+
+        unset($_SESSION[$messageType]);
     }
 }

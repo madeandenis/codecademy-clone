@@ -1,6 +1,5 @@
 <?php
   use app\utils\FlashMessage;
-  use app\utils\Session;
 ?>
 
 <!DOCTYPE html>
@@ -19,11 +18,8 @@
       </a>
       <?php
         $flashMessage = new FlashMessage();
-        $flashMessage->setPageType('login');
-        $flashMessage->displayErrorMessage();
-        $flashMessage->displaySuccessMessage();
-
-        Session::end();
+        $flashMessage->setPageRedirect("https://codecademyre.com/home");
+        $flashMessage->displayFlashMessage();
       ?>
       <div class="auth-form">
         <form id="loginForm" method="post">
@@ -59,5 +55,7 @@
     </div>  
 
     <script src="assets/js/auth.js"></script>
+    <script src="assets/js/flashMessage.js"></script>
 </body>
 </html>
+

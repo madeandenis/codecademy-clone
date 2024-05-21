@@ -6,6 +6,8 @@ use app\utils\Session;
 use app\utils\FileUtils;
 use app\exceptions\FileUploadException;
 
+// TODO - Check if a course with the same title already exists
+
 Session::start();
 
 // Check and modify the php.ini
