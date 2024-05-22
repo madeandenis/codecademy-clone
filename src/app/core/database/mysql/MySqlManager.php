@@ -2,6 +2,7 @@
 
 namespace app\core\database\mysql;
 
+use app\services\providers\EnvService;
 use PDO;
 use PDOException;
 
@@ -15,11 +16,11 @@ class MySqlManager
 
     public static function initializeConfig(): void
     {
-        $configFilePath = realpath(__DIR__ . '/../../../../../config/mysql.env');
-        self::$host = parse_ini_file($configFilePath)["DB_HOST"];
-        self::$db_name = parse_ini_file($configFilePath)["DB_NAME"];
-        self::$username = parse_ini_file($configFilePath)["DB_USERNAME"];
-        self::$password = parse_ini_file($configFilePath)["DB_PASSWORD"];
+        $envService = new EnvService();        
+        self::$host = $envService->get("DB_HOST");
+        self::$db_name = $envService->get("DB_NAME");
+        self::$username = $envService->get("DB_USERNAME");
+        self::$password = $envService->get("DB_PASSWORD");
     }
 
     public static function executeQuery($query, $pdo)

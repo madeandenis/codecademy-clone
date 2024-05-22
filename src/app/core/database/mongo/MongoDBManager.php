@@ -3,6 +3,7 @@
 namespace app\core\database\mongo;
 
 use Exception;
+use app\services\providers\EnvService;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Database;
@@ -13,8 +14,8 @@ class MongoDBManager{
     private static ?Client $client = null;
 
     public static function initializeConfig(): void {
-        $configFilePath = realpath(__DIR__ . '/../../../../../config/mongodb.env');
-        self::$uri = parse_ini_file($configFilePath)["MONGODB_URI"];
+        $envService = new EnvService();
+        self::$uri = $envService->get("MONGODB_URI");
     }
     public static function setUri(string $uri){
         self::$uri = $uri; 

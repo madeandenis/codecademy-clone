@@ -2,11 +2,11 @@
 
 namespace app\utils;
 
+use app\services\providers\EnvService;
 use Exception;
 use app\exceptions\JWTException;
 
 use app\models\User;
-use app\repositories\RoleRepository;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\ExpiredException;
@@ -19,9 +19,9 @@ class JWTManager{
     private int $expDuration;
 
     public function __construct(){
-        $configFilePath = realpath(__DIR__ . '/../../../config/jwt.env');
-        $this->secretKey = parse_ini_file($configFilePath)["JWT_KEY"];
-        $this->expDuration = parse_ini_file($configFilePath)["JWT_EXP"];
+        $envService = new EnvService();
+        $this->secretKey = $envService->get("JWT_KEY");
+        $this->expDuration = $envService->get("JWT_EXP");
     }
 
     public function createToken(User $user){

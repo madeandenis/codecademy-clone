@@ -40,6 +40,7 @@ class Controller
     {
         if (!isset($_COOKIE["jwtToken"])) {
             $this->redirectToLogin();
+            return;
         }
         require $this->viewsPath . "/upload/$view.php";
     }
@@ -58,10 +59,12 @@ class Controller
 
         if (!isset($_COOKIE["jwtToken"])) {
             $this->redirectToLogin();
+            return;
         }
 
         if (!$jwtManager->hasAdminRole($_COOKIE["jwtToken"])) {
             $this->renderError('403');
+            return;
         }
 
         require $this->viewsPath . "/admin/$view.php";
@@ -89,6 +92,7 @@ class Controller
     {
         if (!isset($_COOKIE["jwtToken"])) {
             $this->redirectToLogin();
+            return;
         }
         require $this->middlewarePath . "/handleUpload.php";
     }
