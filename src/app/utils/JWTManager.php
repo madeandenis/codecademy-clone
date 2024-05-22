@@ -20,7 +20,7 @@ class JWTManager{
 
     public function __construct(){
         $envService = new EnvService();
-        $this->secretKey = $envService->get("JWT_KEY");
+        $this->secretKey = $envService->get("JWT_SECRET");
         $this->expDuration = $envService->get("JWT_EXP");
     }
 

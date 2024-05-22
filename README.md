@@ -107,3 +107,17 @@ This repository is designed with the MVC (Model-View-Controller) architecture, s
 
 - `firebase/php-jwt` for JWT handling.
 - `mongodb/mongodb` for MongoDB interactions.
+
+## Environment Variables
+
+.env file need to be created in the config folder.
+
+- `MONGO_URI`: MongoDB connection string.
+- `MYSQL_HOST`: MySQL host.
+- `MYSQL_DB_NAME`: MySQL database.
+- `MYSQL_USER`: MySQL user.
+- `MYSQL_PASSWORD`: MySQL password.
+- `JWT_SECRET`: JWT secret.
+- `JWT_EXP`: JWT expiration time in seconds.
+- `ABSTRACT_API_KEY`: Abstract API key for email validation.
+

@@ -17,10 +17,10 @@ class MySqlManager
     public static function initializeConfig(): void
     {
         $envService = new EnvService();        
-        self::$host = $envService->get("DB_HOST");
-        self::$db_name = $envService->get("DB_NAME");
-        self::$username = $envService->get("DB_USERNAME");
-        self::$password = $envService->get("DB_PASSWORD");
+        self::$host = $envService->get("MYSQL_HOST");
+        self::$db_name = $envService->get("MYSQL_DB_NAME");
+        self::$username = $envService->get("MYSQL_USER");
+        self::$password = $envService->get("MYSQL_PASSWORD");
     }
 
     public static function executeQuery($query, $pdo)

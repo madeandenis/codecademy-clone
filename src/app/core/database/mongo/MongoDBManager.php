@@ -15,7 +15,7 @@ class MongoDBManager{
 
     public static function initializeConfig(): void {
         $envService = new EnvService();
-        self::$uri = $envService->get("MONGODB_URI");
+        self::$uri = $envService->get("MONGO_URI");
     }
     public static function setUri(string $uri){
         self::$uri = $uri; 
