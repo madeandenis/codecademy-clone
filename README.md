@@ -121,3 +121,13 @@ This repository is designed with the MVC (Model-View-Controller) architecture, s
 - `JWT_EXP`: JWT expiration time in seconds.
 - `ABSTRACT_API_KEY`: Abstract API key for email validation.
 
+## Demo Images
+
+![1](https://github.com/madeandenis/codecademy-clone/assets/123639454/775fee35-7980-483f-a175-702227f3f7c1)
+![2](https://github.com/madeandenis/codecademy-clone/assets/123639454/24018e56-ef04-4df0-b557-68d9638f96ee)
+![3](https://github.com/madeandenis/codecademy-clone/assets/123639454/52b64858-9a82-4462-897a-41a1a0633a2e)
+![4](https://github.com/madeandenis/codecademy-clone/assets/123639454/d401cd7f-ad26-4df0-a6ba-389e70a0ee1a)
+![5](https://github.com/madeandenis/codecademy-clone/assets/123639454/d9a94542-12f9-46fa-afb5-354a6669ce62)
+![6](https://github.com/madeandenis/codecademy-clone/assets/123639454/35d2dd96-58fd-485b-a6e9-35f94416b972)
+![7](https://github.com/madeandenis/codecademy-clone/assets/123639454/33b89a39-bba6-4e1f-8a44-f9246907c47a)
+![8](https://github.com/madeandenis/codecademy-clone/assets/123639454/9ee34c82-07cf-497a-93ec-887670f7063a)
