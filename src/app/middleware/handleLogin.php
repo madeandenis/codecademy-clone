@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username_or_email']) 
         // Get MongoDB necessary tools
         $roleCollection = MongoDBManager::getCollection('userdb', 'roles');
         $userCollection = MongoDBManager::getCollection('userdb', 'users');
-        if(!$roleCollection || $userCollection){
+        if(!$roleCollection || !$userCollection){
             throw new Exception('Failed connection to server');
         }
         $roleRepository = new RoleRepository($roleCollection);

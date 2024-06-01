@@ -1536,7 +1536,7 @@ Pricing-Page
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items:start;
   font-family: 'Apercu', sans-serif;
   max-width: 500px;
   margin: 100px auto;
@@ -1547,7 +1547,10 @@ Pricing-Page
   width: 90%;
 }
 .auth-form #signupForm{
-  margin-top: -70px;
+  margin-top: -20vh;
+}
+.auth-form #loginForm{
+  margin-top: -10vh;
 }
 
 .auth-form h1 {
@@ -1701,24 +1704,23 @@ Pricing-Page
 
 /* Dynamic Components */
 .message-container{
-  position: relative;
+  position: absolute;
   display: inline-block;
+  top: 5%;
   left: 50%;
-  transform: translate(-50%, 50%);
-  width: 350px;
+  transform: translate(-50%, 5%);
+  width: 360px;
   padding: 15px;
   justify-content: center;
   flex-direction: column;
   background-color: white;
   border: 1px solid black;
-}
-#loginBody .message-container{
-  transform: translate(-50%, 150%);
+  z-index: 9999;
 }
 
 .error_msg,
 .success_msg{
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 550;
   font-family: 'Apercu', sans-serif;
   list-style-type: none;
