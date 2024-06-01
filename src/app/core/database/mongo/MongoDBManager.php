@@ -36,6 +36,9 @@ class MongoDBManager{
         return self::$client;
     }
     public static function getDatabase(string $databaseName): ?Database{
+        if(!self::getClient()){
+            return null;
+        }
         try{
             return self::getClient()->selectDatabase($databaseName);
         } catch (Exception $e){
@@ -43,6 +46,9 @@ class MongoDBManager{
         }
     }
     public static function getCollection(string $databaseName, string $collectionName): ?Collection{
+        if(!self::getClient()){
+            return null;
+        }
         try{
             return self::getDatabase($databaseName)->selectCollection($collectionName);
         } catch (Exception $e){
